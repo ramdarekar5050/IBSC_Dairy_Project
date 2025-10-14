@@ -33,50 +33,16 @@ export class SignupComponent {
   }
 
   async onSubmit() {
-    if (!this.firstName() || !this.lastName() || !this.email() || !this.password() || !this.confirmPassword()) {
-      this.errorMessage.set('Please fill in all fields');
-      return;
-    }
-
-    if (!this.agreeToTerms()) {
-      this.errorMessage.set('Please agree to the terms and conditions');
-      return;
-    }
-
-    if (this.password() !== this.confirmPassword()) {
-      this.errorMessage.set('Passwords do not match');
-      return;
-    }
-
-    if (this.password().length < 8) {
-      this.errorMessage.set('Password must be at least 8 characters long');
-      return;
-    }
-
     this.isLoading.set(true);
     this.errorMessage.set('');
-
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // For demo purposes, accept any valid email/password
-      if (this.email().includes('@') && this.password().length >= 8) {
-        // Store user session (in real app, this would be handled by auth service)
-        localStorage.setItem('user', JSON.stringify({ 
-          firstName: this.firstName(),
-          lastName: this.lastName(),
-          email: this.email() 
-        }));
-        this.router.navigate(['/dashboard']);
-      } else {
-        this.errorMessage.set('Invalid email format or password too weak');
-      }
-    } catch (error) {
-      this.errorMessage.set('Sign up failed. Please try again.');
-    } finally {
-      this.isLoading.set(false);
-    }
+    await new Promise(resolve => setTimeout(resolve, 600));
+    localStorage.setItem('user', JSON.stringify({ 
+      firstName: this.firstName() || 'Guest',
+      lastName: this.lastName() || '',
+      email: this.email() || 'guest@example.com' 
+    }));
+    this.router.navigate(['/dashboard']);
+    this.isLoading.set(false);
   }
 
   navigateToLogin() {
@@ -101,5 +67,15 @@ export class SignupComponent {
       case 'strong': return 'Strong';
       default: return '';
     }
+  }
+
+  continueWithFacebook() {
+    // Placeholder: integrate real Facebook OAuth via your backend or Firebase
+    this.isLoading.set(true);
+    setTimeout(() => {
+      localStorage.setItem('user', JSON.stringify({ provider: 'facebook', email: this.email() || 'fb_user@example.com' }));
+      this.router.navigate(['/dashboard']);
+      this.isLoading.set(false);
+    }, 1500);
   }
 }

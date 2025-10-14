@@ -1,0 +1,71 @@
+.home-wrapper {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(1200px 600px at 50% 0%, rgba(63,81,181,0.15), transparent 60%),
+              linear-gradient(135deg, #eef3ff 0%, #ffffff 100%);
+}
+
+.bg-decor {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  filter: saturate(0.9) contrast(1.05);
+  pointer-events: none;
+}
+
+/* Cow silhouette background */
+.bg-cow {
+  background-image: url('/assets/images/cow.jpg'), url('/assets/images/cow.svg');
+}
+
+/* Buffalo silhouette background */
+.bg-buffalo {
+  background-image: url('/assets/images/buffalo.jpg'), url('/assets/images/buffalo.svg');
+  mix-blend-mode: multiply;
+}
+
+.home-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 32px 24px;
+  backdrop-filter: blur(2px);
+}
+
+.home-content h1 {
+  margin: 0 0 12px 0;
+  font-size: 40px;
+  line-height: 1.1;
+  color: #1f2a44;
+}
+
+.subtitle {
+  margin: 0 0 24px 0;
+  color: #2b3a67;
+  font-size: 16px;
+}
+
+.get-started {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3f51b5, #5c6bc0);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(63, 81, 181, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.get-started:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(63, 81, 181, 0.3);
+  filter: brightness(1.05);
+}
+

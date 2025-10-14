@@ -24,34 +24,25 @@ export class LoginComponent {
   }
 
   async onSubmit() {
-    if (!this.email() || !this.password()) {
-      this.errorMessage.set('Please fill in all fields');
-      return;
-    }
-
     this.isLoading.set(true);
     this.errorMessage.set('');
-
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // For demo purposes, accept any email/password
-      if (this.email().includes('@') && this.password().length >= 6) {
-        // Store user session (in real app, this would be handled by auth service)
-        localStorage.setItem('user', JSON.stringify({ email: this.email() }));
-        this.router.navigate(['/dashboard']);
-      } else {
-        this.errorMessage.set('Invalid email or password');
-      }
-    } catch (error) {
-      this.errorMessage.set('Login failed. Please try again.');
-    } finally {
-      this.isLoading.set(false);
-    }
+    await new Promise(resolve => setTimeout(resolve, 500));
+    localStorage.setItem('user', JSON.stringify({ email: this.email() || 'guest@example.com' }));
+    this.router.navigate(['/dashboard']);
+    this.isLoading.set(false);
   }
 
   navigateToSignup() {
     this.router.navigate(['/signup']);
+  }
+
+  continueWithFacebook() {
+    // Placeholder: integrate real Facebook OAuth via your backend or Firebase
+    this.isLoading.set(true);
+    setTimeout(() => {
+      localStorage.setItem('user', JSON.stringify({ provider: 'facebook', email: this.email() || 'fb_user@example.com' }));
+      this.router.navigate(['/dashboard']);
+      this.isLoading.set(false);
+    }, 1200);
   }
 }

@@ -24,9 +24,9 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  padding: 40px;
+  padding: 20px 24px;
   width: 100%;
-  max-width: 450px;
+  max-width: 520px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
@@ -47,7 +47,7 @@
 
 .auth-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 18px;
 }
 
 .logo {
@@ -70,7 +70,7 @@
 }
 
 .auth-header h2 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #2d3748;
   margin: 0 0 8px 0;
@@ -85,7 +85,7 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 }
 
 .form-group {
@@ -115,10 +115,10 @@
 
 .input-wrapper input {
   width: 100%;
-  padding: 16px 16px 16px 48px;
+  padding: 10px 10px 10px 40px;
   border: 2px solid #e5e7eb;
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 14px;
   transition: all 0.3s ease;
   background: #fff;
   box-sizing: border-box;
@@ -235,12 +235,12 @@
 
 .auth-button {
   width: 100%;
-  padding: 16px;
+  padding: 10px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -282,7 +282,7 @@
 .divider {
   position: relative;
   text-align: center;
-  margin: 20px 0;
+  margin: 12px 0;
 }
 
 .divider::before {
@@ -314,12 +314,12 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 14px;
+  padding: 10px;
   border: 2px solid #e5e7eb;
   border-radius: 12px;
   background: white;
   color: #374151;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -336,9 +336,13 @@
   background: #f8f9ff;
 }
 
-.social-button.github:hover {
-  border-color: #333;
-  background: #f6f8fa;
+.social-button.facebook {
+  border-color: #1877f2;
+}
+
+.social-button.facebook:hover {
+  border-color: #1877f2;
+  background: #f0f6ff;
 }
 
 .auth-footer {
