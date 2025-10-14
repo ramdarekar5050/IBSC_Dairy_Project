@@ -1,1 +1,57 @@
-<div></div>
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <h1>Dairy Management System</h1>
+      </div>
+      <div class="user-info">
+        <span>Welcome, {{ user()?.name || 'User' }}</span>
+        <button class="logout-btn" (click)="logout()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 17v-3H9v-4h7V7l5 5-5 5zM14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
+          </svg>
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <h2>Dashboard</h2>
+      <p>Manage your dairy operations efficiently</p>
+    </div>
+
+    <!-- Module Selection Display -->
+    @if (selectedModule()) {
+      <div class="module-welcome">
+        <h3>Welcome to {{ getModuleName(selectedModule()!) }} Module</h3>
+        <p>This module is currently under development. More features will be available soon!</p>
+        <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
+      </div>
+    } @else {
+      <!-- Modules Grid -->
+      <div class="modules-section">
+        <h3>Available Modules</h3>
+        <div class="modules-grid">
+          @for (module of modules; track module.id) {
+            <div class="module-card" (click)="onModuleClick(module.id)">
+              <div class="module-icon">{{ module.icon }}</div>
+              <div class="module-content">
+                <h4>{{ module.name }}</h4>
+                <p>{{ module.description }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </main>
+</div>
+  
