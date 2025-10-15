@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 interface Module {
@@ -9,16 +10,50 @@ interface Module {
   description: string;
 }
 
+interface MilkForm {
+  date: string;
+  farmerId: string;
+  liters: number | '';
+  fat: number | '';
+  snf: number | '';
+  farmerName: string;
+  rate: number | '';
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
   user = signal<any>(null);
   selectedModule = signal<string | null>(null);
+  milkSession = signal<'morning' | 'evening'>('morning');
+  selectedMilkSubModule = signal<'morning' | 'evening' | null>(null);
+
+  milkEntryForm = signal<MilkForm>({
+    date: new Date().toISOString().slice(0, 10),
+    farmerId: '',
+    liters: '',
+    fat: '',
+    snf: '',
+    farmerName: '',
+    rate: ''
+  });
+
+  milkEntries = signal<Array<{
+    session: 'morning' | 'evening';
+    date: string;
+    farmerId: string;
+    farmerName: string;
+    liters: number;
+    fat: number;
+    snf: number;
+    rate: number;
+    totalAmount: number;
+  }>>([]);
 
   modules: Module[] = [
     {
@@ -76,10 +111,94 @@ export class DashboardComponent {
 
   onModuleClick(moduleId: string) {
     this.selectedModule.set(moduleId);
+    if (moduleId === 'milk-entry') {
+      this.resetMilkForm();
+      this.selectedMilkSubModule.set(null);
+    }
   }
 
   getModuleName(moduleId: string): string {
     const module = this.modules.find(m => m.id === moduleId);
     return module ? module.name : '';
+  }
+
+  setMilkSession(session: 'morning' | 'evening') {
+    if (session !== this.milkSession()) {
+      this.milkSession.set(session);
+      this.resetMilkForm();
+    }
+  }
+
+  openMilkSubModule(session: 'morning' | 'evening') {
+    this.milkSession.set(session);
+    this.selectedMilkSubModule.set(session);
+    this.resetMilkForm();
+  }
+
+  resetMilkForm() {
+    const today = new Date().toISOString().slice(0, 10);
+    this.milkEntryForm.set({
+      date: today,
+      farmerId: '',
+      liters: '',
+      fat: '',
+      snf: '',
+      farmerName: '',
+      rate: ''
+    });
+  }
+
+  updateMilkForm<K extends keyof MilkForm>(key: K, value: MilkForm[K]) {
+    const current = this.milkEntryForm();
+    this.milkEntryForm.set({ ...current, [key]: value });
+  }
+
+  onFarmerIdChange(id: string) {
+    // Placeholder for future DB fetch; for now, keep name blank
+    const current = this.milkEntryForm();
+    this.milkEntryForm.set({ ...current, farmerId: id, farmerName: '' });
+  }
+
+  saveMilkEntry() {
+    const form = this.milkEntryForm();
+    if (!form.farmerId || !form.liters || !form.fat || !form.snf) {
+      alert('Please fill all fields');
+      return;
+    }
+    const litersNum = Number(form.liters);
+    const fatNum = Number(form.fat);
+    const snfNum = Number(form.snf);
+    const rateNum = form.rate === '' ? 0 : Number(form.rate);
+    const total = +(litersNum * rateNum).toFixed(2);
+    this.milkEntries.update(list => [
+      ...list,
+      {
+        session: this.milkSession(),
+        date: form.date,
+        farmerId: form.farmerId.trim(),
+        farmerName: form.farmerName.trim(),
+        liters: litersNum,
+        fat: fatNum,
+        snf: snfNum,
+        rate: rateNum,
+        totalAmount: total
+      }
+    ]);
+    this.resetMilkForm();
+  }
+
+  removeMilkEntry(index: number) {
+    const current = this.milkEntries();
+    const entry = current[index];
+    if (!entry) {
+      return;
+    }
+    const message = `Are you sure you want to delete this ${entry.session} entry?\n\nDate: ${entry.date}\nFarmer ID: ${entry.farmerId}\nLiters: ${entry.liters}`;
+    const confirmed = window.confirm(message);
+    if (!confirmed) {
+      return;
+    }
+    const updated = current.filter((_, i) => i !== index);
+    this.milkEntries.set(updated);
   }
 }
