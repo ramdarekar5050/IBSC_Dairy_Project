@@ -3,8 +3,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  background: linear-gradient(135deg, #6b7ae6 0%, #6d5aa6 100%);
+  padding: 12px;
   position: relative;
   overflow: hidden;
 }
@@ -21,13 +21,13 @@
 }
 
 .auth-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 16px 18px;
   width: 100%;
-  max-width: 520px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   z-index: 1;
@@ -63,14 +63,14 @@
 }
 
 .logo h1 {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   color: #2d3748;
   margin: 0;
 }
 
 .auth-header h2 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: #2d3748;
   margin: 0 0 8px 0;
@@ -78,14 +78,14 @@
 
 .auth-header p {
   color: #718096;
-  font-size: 14px;
+  font-size: 12px;
   margin: 0;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .form-group {
@@ -95,7 +95,7 @@
 }
 
 .form-group label {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   color: #374151;
 }
@@ -115,10 +115,10 @@
 
 .input-wrapper input {
   width: 100%;
-  padding: 10px 10px 10px 40px;
+  padding: 8px 8px 8px 36px;
   border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 13px;
   transition: all 0.3s ease;
   background: #fff;
   box-sizing: border-box;
@@ -142,7 +142,7 @@
   border: none;
   color: #9ca3af;
   cursor: pointer;
-  padding: 4px;
+  padding: 2px;
   border-radius: 6px;
   transition: color 0.3s ease;
 }
@@ -160,7 +160,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 10px 0;
+  margin: 6px 0 4px 0;
 }
 
 .checkbox-wrapper {
@@ -205,7 +205,7 @@
 .forgot-password {
   color: #667eea;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   transition: color 0.3s ease;
 }
@@ -218,12 +218,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
+  padding: 8px 12px;
   background: #fef2f2;
   border: 1px solid #fecaca;
   border-radius: 8px;
   color: #dc2626;
-  font-size: 14px;
+  font-size: 12px;
   animation: shake 0.5s ease-in-out;
 }
 
@@ -235,12 +235,12 @@
 
 .auth-button {
   width: 100%;
-  padding: 10px;
+  padding: 8px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -282,7 +282,7 @@
 .divider {
   position: relative;
   text-align: center;
-  margin: 12px 0;
+  margin: 8px 0;
 }
 
 .divider::before {
@@ -297,16 +297,16 @@
 
 .divider span {
   background: rgba(255, 255, 255, 0.95);
-  padding: 0 16px;
+  padding: 0 12px;
   color: #9ca3af;
-  font-size: 14px;
+  font-size: 12px;
   position: relative;
 }
 
 .social-login {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .social-button {
@@ -314,12 +314,12 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 10px;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
+  padding: 8px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
   background: white;
   color: #374151;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -347,12 +347,12 @@
 
 .auth-footer {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 12px;
 }
 
 .auth-footer p {
   color: #718096;
-  font-size: 14px;
+  font-size: 12px;
   margin: 0;
 }
 
@@ -370,18 +370,18 @@
 
 @media (max-width: 480px) {
   .auth-container {
-    padding: 10px;
+    padding: 8px;
   }
   
   .auth-card {
-    padding: 30px 20px;
+    padding: 16px;
   }
   
   .logo h1 {
-    font-size: 24px;
+    font-size: 20px;
   }
   
   .auth-header h2 {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
