@@ -60,6 +60,7 @@ export class DashboardComponent {
     rate: number;
     totalAmount: number;
   }>>([]);
+  editingMilkIndex = signal<number | null>(null);
 
   modules: Module[] = [
     {
@@ -174,20 +175,27 @@ export class DashboardComponent {
     const snfNum = Number(form.snf);
     const rateNum = form.rate === '' ? 0 : Number(form.rate);
     const total = +(litersNum * rateNum).toFixed(2);
-    this.milkEntries.update(list => [
-      ...list,
-      {
-        session: this.milkSession(),
-        date: form.date,
-        farmerId: form.farmerId.trim(),
-        farmerName: form.farmerName.trim(),
-        liters: litersNum,
-        fat: fatNum,
-        snf: snfNum,
-        rate: rateNum,
-        totalAmount: total
-      }
-    ]);
+    const entry = {
+      session: this.milkSession(),
+      date: form.date,
+      farmerId: form.farmerId.trim(),
+      farmerName: form.farmerName.trim(),
+      liters: litersNum,
+      fat: fatNum,
+      snf: snfNum,
+      rate: rateNum,
+      totalAmount: total
+    } as const;
+
+    const editIndex = this.editingMilkIndex();
+    if (editIndex !== null) {
+      const list = [...this.milkEntries()];
+      list[editIndex] = { ...entry };
+      this.milkEntries.set(list);
+      this.editingMilkIndex.set(null);
+    } else {
+      this.milkEntries.update(list => [...list, { ...entry }]);
+    }
     this.resetMilkForm();
   }
 
@@ -204,6 +212,24 @@ export class DashboardComponent {
     }
     const updated = current.filter((_, i) => i !== index);
     this.milkEntries.set(updated);
+  }
+
+  editMilkEntry(index: number) {
+    const current = this.milkEntries();
+    const entry = current[index];
+    if (!entry) return;
+    this.milkSession.set(entry.session);
+    this.selectedMilkSubModule.set(entry.session);
+    this.milkEntryForm.set({
+      date: entry.date,
+      farmerId: entry.farmerId,
+      liters: entry.liters,
+      fat: entry.fat,
+      snf: entry.snf,
+      farmerName: entry.farmerName,
+      rate: entry.rate
+    });
+    this.editingMilkIndex.set(index);
   }
 
   // Customers helpers

@@ -73,7 +73,7 @@
                 </div>
                 <div class="field">
                   <label>Farmer ID</label>
-                  <input type="text" placeholder="Enter farmer ID" [ngModel]="milkEntryForm().farmerId" (ngModelChange)="onFarmerIdChange($event)" />
+                  <input type="text" placeholder="Enter farmer ID" [ngModel]="milkEntryForm().farmerId" (ngModelChange)="onFarmerIdChange($event)" (keydown.enter)="$event.preventDefault(); litersInput.focus()" />
                 </div>
                 <div class="field">
                   <label>Farmer Name</label>
@@ -84,19 +84,19 @@
               <div class="field-row">
                 <div class="field">
                   <label>Liters</label>
-                  <input type="number" min="0" step="0.01" placeholder="e.g. 12.5" [ngModel]="milkEntryForm().liters" (ngModelChange)="updateMilkForm('liters', $event)" />
+                  <input #litersInput type="number" min="0" step="0.01" placeholder="e.g. 12.5" [ngModel]="milkEntryForm().liters" (ngModelChange)="updateMilkForm('liters', $event)" (keydown.enter)="$event.preventDefault(); fatInput.focus()" />
                 </div>
                 <div class="field">
                   <label>Fat (%)</label>
-                  <input type="number" min="0" step="0.1" placeholder="e.g. 3.5" [ngModel]="milkEntryForm().fat" (ngModelChange)="updateMilkForm('fat', $event)" />
+                  <input #fatInput type="number" min="0" step="0.1" placeholder="e.g. 3.5" [ngModel]="milkEntryForm().fat" (ngModelChange)="updateMilkForm('fat', $event)" (keydown.enter)="$event.preventDefault(); snfInput.focus()" />
                 </div>
                 <div class="field">
                   <label>SNF (%)</label>
-                  <input type="number" min="0" step="0.1" placeholder="e.g. 8.5" [ngModel]="milkEntryForm().snf" (ngModelChange)="updateMilkForm('snf', $event)" />
+                  <input #snfInput type="number" min="0" step="0.1" placeholder="e.g. 8.5" [ngModel]="milkEntryForm().snf" (ngModelChange)="updateMilkForm('snf', $event)" (keydown.enter)="$event.preventDefault(); rateInput.focus()" />
                 </div>
                 <div class="field">
                   <label>Rate (per liter)</label>
-                  <input type="number" min="0" step="0.01" placeholder="e.g. 34.5" [ngModel]="milkEntryForm().rate" (ngModelChange)="updateMilkForm('rate', $event)" />
+                  <input #rateInput type="number" min="0" step="0.01" placeholder="e.g. 34.5" [ngModel]="milkEntryForm().rate" (ngModelChange)="updateMilkForm('rate', $event)" (keydown.enter)="$event.preventDefault(); saveMilkEntry()" />
                 </div>
               </div>
 
@@ -136,7 +136,12 @@
                           <td>{{ entry.snf }}</td>
                           <td>{{ entry.rate }}</td>
                           <td>{{ entry.totalAmount }}</td>
-                          <td><button class="delete-btn" (click)="removeMilkEntry($index)" aria-label="Delete entry">✕</button></td>
+                          <td>
+                            <div class="row-actions">
+                              <button class="edit-btn" (click)="editMilkEntry($index)" aria-label="Edit entry">✎</button>
+                              <button class="delete-btn" (click)="removeMilkEntry($index)" aria-label="Delete entry">✕</button>
+                            </div>
+                          </td>
                         </tr>
                       }
                     }
