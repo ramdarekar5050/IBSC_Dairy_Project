@@ -23,13 +23,35 @@
           <tr>
             <th>Centre ID</th>
             <th>Location</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           @for (c of centres(); track $index) {
             <tr>
-              <td>{{ c.centreId }}</td>
-              <td>{{ c.location }}</td>
+              <td>
+                @if (editingCentreIndex() === $index) {
+                  <input type="text" [ngModel]="editingCentre().centreId" (ngModelChange)="updateEditingCentre('centreId', $event)" />
+                } @else { {{ c.centreId }} }
+              </td>
+              <td>
+                @if (editingCentreIndex() === $index) {
+                  <input type="text" [ngModel]="editingCentre().location" (ngModelChange)="updateEditingCentre('location', $event)" />
+                } @else { {{ c.location }} }
+              </td>
+              <td>
+                @if (editingCentreIndex() === $index) {
+                  <div class="row-actions">
+                    <button class="save-btn" (click)="saveEditCentre($index)">Save</button>
+                    <button class="reset-btn" (click)="cancelEditCentre()">Cancel</button>
+                  </div>
+                } @else {
+                  <div class="row-actions">
+                    <button class="edit-btn" (click)="startEditCentre($index)" aria-label="Edit centre">✎</button>
+                    <button class="delete-btn" (click)="removeCentre($index)" aria-label="Delete centre">✕</button>
+                  </div>
+                }
+              </td>
             </tr>
           }
         </tbody>
