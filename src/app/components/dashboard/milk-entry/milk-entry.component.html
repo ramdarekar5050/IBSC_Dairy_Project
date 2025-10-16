@@ -1,6 +1,123 @@
-<div class="module-wrapper">
-  <h3>Milk Entry</h3>
-  <p>Module placeholder. Integrate with dashboard state as needed.</p>
+<div class="milk-entry">
+  <div class="milk-entry-header">
+    <h3>Milk Entry</h3>
+  </div>
+
+  @if (!selectedMilkSubModule()) {
+    <div class="modules-section">
+      <h3>Select Session</h3>
+      <div class="modules-grid">
+        <div class="module-card" (click)="openMilkSubModule('morning')">
+          <div class="module-icon">🌅</div>
+          <div class="module-content">
+            <h4>Morning Entry</h4>
+            <p>Add morning milk entries</p>
+          </div>
+        </div>
+        <div class="module-card" (click)="openMilkSubModule('evening')">
+          <div class="module-icon">🌇</div>
+          <div class="module-content">
+            <h4>Evening Entry</h4>
+            <p>Add evening milk entries</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="tabs">
+      <button class="tab" [class.active]="milkSession() === 'morning'" (click)="openMilkSubModule('morning')">🌅 Morning Entry</button>
+      <button class="tab" [class.active]="milkSession() === 'evening'" (click)="openMilkSubModule('evening')">🌇 Evening Entry</button>
+    </div>
+
+    <div class="milk-form">
+      <div class="field-row">
+        <div class="field">
+          <label>Date</label>
+          <input type="date" [ngModel]="milkEntryForm().date" (ngModelChange)="updateMilkForm('date', $event)" />
+        </div>
+        <div class="field">
+          <label>Farmer ID</label>
+          <input type="text" [ngModel]="milkEntryForm().farmerId" (ngModelChange)="onFarmerIdChange($event)" (keydown.enter)="$event.preventDefault(); litersInput.focus()" />
+        </div>
+        <div class="field">
+          <label>Farmer Name</label>
+          <input type="text" [ngModel]="milkEntryForm().farmerName" readonly />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Liters</label>
+          <input #litersInput type="number" min="0" step="0.01" [ngModel]="milkEntryForm().liters" (ngModelChange)="updateMilkForm('liters', $event)" (keydown.enter)="$event.preventDefault(); fatInput.focus()" />
+        </div>
+        <div class="field">
+          <label>Fat (%)</label>
+          <input #fatInput type="number" min="0" step="0.1" [ngModel]="milkEntryForm().fat" (ngModelChange)="updateMilkForm('fat', $event)" (keydown.enter)="$event.preventDefault(); snfInput.focus()" />
+        </div>
+        <div class="field">
+          <label>SNF (%)</label>
+          <input #snfInput type="number" min="0" step="0.1" [ngModel]="milkEntryForm().snf" (ngModelChange)="updateMilkForm('snf', $event)" (keydown.enter)="$event.preventDefault(); rateInput.focus()" />
+        </div>
+        <div class="field">
+          <label>Rate (per liter)</label>
+          <input #rateInput type="number" min="0" step="0.01" [ngModel]="milkEntryForm().rate" (ngModelChange)="updateMilkForm('rate', $event)" (keydown.enter)="$event.preventDefault(); saveMilkEntry()" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="save-btn" (click)="saveMilkEntry()">Save Entry</button>
+        <button class="reset-btn" (click)="resetMilkForm()">Reset</button>
+      </div>
+    </div>
+
+    <div class="entries">
+      <h4>{{ milkSession() === 'morning' ? 'Morning' : 'Evening' }} Entries</h4>
+      <div class="table-wrapper" *ngIf="(milkEntries() | slice:0).length; else emptyState">
+        <table class="milk-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Farmer ID</th>
+              <th>Name</th>
+              <th>Liters</th>
+              <th>Fat %</th>
+              <th>SNF %</th>
+              <th>Rate</th>
+              <th>Total Amount</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of milkEntries(); track $index) {
+              @if (entry.session === milkSession()) {
+                <tr>
+                  <td>{{ entry.date }}</td>
+                  <td>{{ entry.farmerId }}</td>
+                  <td>{{ entry.farmerName || '-' }}</td>
+                  <td>{{ entry.liters }}</td>
+                  <td>{{ entry.fat }}</td>
+                  <td>{{ entry.snf }}</td>
+                  <td>{{ entry.rate }}</td>
+                  <td>{{ entry.totalAmount }}</td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="edit-btn" (click)="editMilkEntry($index)" aria-label="Edit entry">✎</button>
+                      <button class="delete-btn" (click)="removeMilkEntry($index)" aria-label="Delete entry">✕</button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+      <ng-template #emptyState>
+        <div class="empty">
+          <span>No entries yet for this session.</span>
+        </div>
+      </ng-template>
+    </div>
+  }
 </div>
 
 
