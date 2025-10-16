@@ -156,11 +156,66 @@
           }
         </div>
       } @else {
-        <div class="module-welcome">
-          <h3>Welcome to {{ getModuleName(selectedModule()!) }} Module</h3>
-          <p>This module is currently under development. More features will be available soon!</p>
-          <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
-        </div>
+        @if (selectedModule() === 'add-customer') {
+          <div class="milk-entry">
+            <div class="milk-entry-header">
+              <h3>Add Customer</h3>
+              <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
+            </div>
+
+            <div class="milk-form">
+              <div class="field-row">
+                <div class="field">
+                  <label>Farmer ID</label>
+                  <input type="text" placeholder="Enter farmer ID" [ngModel]="newCustomer().farmerId" (ngModelChange)="updateNewCustomer('farmerId', $event)" />
+                </div>
+                <div class="field">
+                  <label>Farmer Name</label>
+                  <input type="text" placeholder="Enter farmer name" [ngModel]="newCustomer().farmerName" (ngModelChange)="updateNewCustomer('farmerName', $event)" />
+                </div>
+              </div>
+
+              <div class="actions">
+                <button class="save-btn" (click)="addCustomer()">Add Customer</button>
+              </div>
+            </div>
+
+            <div class="entries">
+              <h4>Customers</h4>
+              <div class="table-wrapper" *ngIf="(customers() | slice:0).length; else noCustomers">
+                <table class="milk-table">
+                  <thead>
+                    <tr>
+                      <th>Farmer ID</th>
+                      <th>Farmer Name</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (c of customers(); track $index) {
+                      <tr>
+                        <td>{{ c.farmerId }}</td>
+                        <td>{{ c.farmerName }}</td>
+                        <td><button class="delete-btn" (click)="removeCustomer($index)" aria-label="Delete customer">✕</button></td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              <ng-template #noCustomers>
+                <div class="empty">
+                  <span>No customers added yet.</span>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        } @else {
+          <div class="module-welcome">
+            <h3>Welcome to {{ getModuleName(selectedModule()!) }} Module</h3>
+            <p>This module is currently under development. More features will be available soon!</p>
+            <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
+          </div>
+        }
       }
     } @else {
       <!-- Modules Grid -->

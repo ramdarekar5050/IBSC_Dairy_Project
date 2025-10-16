@@ -33,6 +33,10 @@ export class DashboardComponent {
   milkSession = signal<'morning' | 'evening'>('morning');
   selectedMilkSubModule = signal<'morning' | 'evening' | null>(null);
 
+  // Customers state
+  customers = signal<Array<{ farmerId: string; farmerName: string }>>([]);
+  newCustomer = signal<{ farmerId: string; farmerName: string }>({ farmerId: '', farmerName: '' });
+
   milkEntryForm = signal<MilkForm>({
     date: new Date().toISOString().slice(0, 10),
     farmerId: '',
@@ -200,5 +204,36 @@ export class DashboardComponent {
     }
     const updated = current.filter((_, i) => i !== index);
     this.milkEntries.set(updated);
+  }
+
+  // Customers helpers
+  updateNewCustomer<K extends keyof { farmerId: string; farmerName: string }>(key: K, value: { farmerId: string; farmerName: string }[K]) {
+    const current = this.newCustomer();
+    this.newCustomer.set({ ...current, [key]: (value as string).trimStart() });
+  }
+
+  addCustomer() {
+    const { farmerId, farmerName } = this.newCustomer();
+    const id = farmerId.trim();
+    const name = farmerName.trim();
+    if (!id || !name) {
+      alert('Enter both Farmer ID and Farmer Name');
+      return;
+    }
+    const exists = this.customers().some(c => c.farmerId.toLowerCase() === id.toLowerCase());
+    if (exists) {
+      alert('Farmer ID already exists');
+      return;
+    }
+    this.customers.update(list => [...list, { farmerId: id, farmerName: name }]);
+    this.newCustomer.set({ farmerId: '', farmerName: '' });
+  }
+
+  removeCustomer(index: number) {
+    const current = this.customers();
+    if (!current[index]) return;
+    const confirmed = window.confirm(`Delete customer ${current[index].farmerId} - ${current[index].farmerName}?`);
+    if (!confirmed) return;
+    this.customers.set(current.filter((_, i) => i !== index));
   }
 }
