@@ -15,18 +15,18 @@
 
     <form (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
-        <label for="email">Email Address</label>
+        <label for="loginId">Login ID</label>
         <div class="input-wrapper">
           <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="3" y="4" width="18" height="16" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+            <path d="M7 8H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
           <input 
-            type="email" 
-            id="email" 
-            [(ngModel)]="email" 
-            name="email"
-            placeholder="Enter your email"
+            type="text" 
+            id="loginId" 
+            [(ngModel)]="loginId" 
+            name="loginId"
+            placeholder="Enter your Login ID"
             required
             [disabled]="isLoading()"
           >
@@ -103,31 +103,9 @@
         </span>
       </button>
 
-      <div class="divider">
-        <span>or</span>
-      </div>
+      
 
-      <div class="social-login">
-        <button type="button" class="social-button google">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.51H17.92C17.66 15.99 16.89 17.24 15.72 18.09V21.34H19.41C21.39 19.52 22.56 16.99 22.56 12.25Z" fill="#4285F4"/>
-            <path d="M12 23C15.24 23 17.95 21.87 19.41 19.34L15.72 18.09C14.73 18.69 13.48 19.01 12 19.01C8.87 19.01 6.22 16.96 5.27 14.13H1.46V17.38C2.99 20.39 6.27 23 12 23Z" fill="#34A853"/>
-            <path d="M5.27 14.13C5.02 13.4 4.89 12.62 4.89 11.81C4.89 11 5.02 10.22 5.27 9.49V6.24H1.46C0.64 7.92 0.14 9.8 0.14 11.81C0.14 13.82 0.64 15.7 1.46 17.38L5.27 14.13Z" fill="#FBBC05"/>
-            <path d="M12 4.99C13.48 4.99 14.73 5.31 15.72 5.91L19.41 2.66C17.95 0.13 15.24 -1 12 -1C6.27 -1 2.99 1.61 1.46 4.62L5.27 7.87C6.22 5.04 8.87 2.99 12 2.99Z" fill="#EA4335"/>
-          </svg>
-          Continue with Google
-        </button>
-        <button type="button" class="social-button facebook" (click)="continueWithFacebook()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 5.03 3.68 9.21 8.49 9.96v-7.04H7.9v-2.92h2.45V9.41c0-2.42 1.44-3.76 3.64-3.76 1.06 0 2.17.19 2.17.19v2.38h-1.22c-1.2 0-1.57.75-1.57 1.52v1.83h2.67l-.43 2.92h-2.24v7.04c4.81-.75 8.49-4.93 8.49-9.96Z"/>
-          </svg>
-          Continue with Facebook
-        </button>
-      </div>
-
-      <div class="auth-footer">
-        <p>Don't have an account? <a (click)="navigateToSignup()" class="auth-link">Sign up</a></p>
-      </div>
+      
     </form>
   </div>
 </div>

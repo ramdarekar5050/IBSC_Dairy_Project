@@ -1,0 +1,15 @@
+.module-wrapper {
+  padding: 16px;
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+

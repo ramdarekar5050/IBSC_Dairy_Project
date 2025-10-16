@@ -36,6 +36,8 @@ export class DashboardComponent {
   // Customers state
   customers = signal<Array<{ farmerId: string; farmerName: string }>>([]);
   newCustomer = signal<{ farmerId: string; farmerName: string }>({ farmerId: '', farmerName: '' });
+  editingCustomerIndex = signal<number | null>(null);
+  editingCustomer = signal<{ farmerId: string; farmerName: string }>({ farmerId: '', farmerName: '' });
 
   milkEntryForm = signal<MilkForm>({
     date: new Date().toISOString().slice(0, 10),
@@ -99,18 +101,16 @@ export class DashboardComponent {
   ];
 
   constructor(private router: Router) {
-    // Get user from localStorage
     const userData = localStorage.getItem('user');
     if (userData) {
       this.user.set(JSON.parse(userData));
-    } else {
-      this.router.navigate(['/login']);
     }
   }
 
   logout() {
     localStorage.removeItem('user');
-    this.router.navigate(['/login']);
+    this.user.set(null);
+    this.router.navigate(['/']);
   }
 
   onModuleClick(moduleId: string) {
@@ -235,5 +235,34 @@ export class DashboardComponent {
     const confirmed = window.confirm(`Delete customer ${current[index].farmerId} - ${current[index].farmerName}?`);
     if (!confirmed) return;
     this.customers.set(current.filter((_, i) => i !== index));
+  }
+
+  startEditCustomer(index: number) {
+    const current = this.customers();
+    const target = current[index];
+    if (!target) return;
+    this.editingCustomerIndex.set(index);
+    this.editingCustomer.set({ farmerId: target.farmerId, farmerName: target.farmerName });
+  }
+
+  saveEditCustomer(index: number) {
+    const { farmerId, farmerName } = this.editingCustomer();
+    const id = farmerId.trim();
+    const name = farmerName.trim();
+    if (!id || !name) return;
+    const list = [...this.customers()];
+    list[index] = { farmerId: id, farmerName: name };
+    this.customers.set(list);
+    this.cancelEditCustomer();
+  }
+
+  cancelEditCustomer() {
+    this.editingCustomerIndex.set(null);
+    this.editingCustomer.set({ farmerId: '', farmerName: '' });
+  }
+
+  updateEditingCustomer(key: 'farmerId' | 'farmerName', value: string) {
+    const current = this.editingCustomer();
+    this.editingCustomer.set({ ...current, [key]: value });
   }
 }

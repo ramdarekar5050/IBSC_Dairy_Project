@@ -194,9 +194,29 @@
                   <tbody>
                     @for (c of customers(); track $index) {
                       <tr>
-                        <td>{{ c.farmerId }}</td>
-                        <td>{{ c.farmerName }}</td>
-                        <td><button class="delete-btn" (click)="removeCustomer($index)" aria-label="Delete customer">✕</button></td>
+                        <td>
+                          @if (editingCustomerIndex() === $index) {
+                            <input type="text" [ngModel]="editingCustomer().farmerId" (ngModelChange)="updateEditingCustomer('farmerId', $event)" />
+                          } @else { {{ c.farmerId }} }
+                        </td>
+                        <td>
+                          @if (editingCustomerIndex() === $index) {
+                            <input type="text" [ngModel]="editingCustomer().farmerName" (ngModelChange)="updateEditingCustomer('farmerName', $event)" />
+                          } @else { {{ c.farmerName }} }
+                        </td>
+                        <td>
+                          @if (editingCustomerIndex() === $index) {
+                            <div class="row-actions">
+                              <button class="save-btn" (click)="saveEditCustomer($index)">Save</button>
+                              <button class="reset-btn" (click)="cancelEditCustomer()">Cancel</button>
+                            </div>
+                          } @else {
+                            <div class="row-actions">
+                              <button class="edit-btn" (click)="startEditCustomer($index)" aria-label="Edit customer">✎</button>
+                              <button class="delete-btn" (click)="removeCustomer($index)" aria-label="Delete customer">✕</button>
+                            </div>
+                          }
+                        </td>
                       </tr>
                     }
                   </tbody>

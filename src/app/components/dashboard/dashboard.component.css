@@ -545,6 +545,26 @@
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease;
 }
+.edit-btn {
+  background: #e0e7ff;
+  color: #3730a3;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  margin-right: 6px;
+}
+
+.edit-btn:hover {
+  background: #c7d2fe;
+  transform: translateY(-1px);
+}
+
+.row-actions {
+  display: inline-flex;
+  gap: 8px;
+}
 
 .delete-btn:hover {
   background: #fecaca;

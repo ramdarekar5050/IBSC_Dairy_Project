@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  email = signal('');
+  loginId = signal('');
   password = signal('');
   isLoading = signal(false);
   showPassword = signal(false);
@@ -26,23 +26,19 @@ export class LoginComponent {
   async onSubmit() {
     this.isLoading.set(true);
     this.errorMessage.set('');
-    await new Promise(resolve => setTimeout(resolve, 500));
-    localStorage.setItem('user', JSON.stringify({ email: this.email() || 'guest@example.com' }));
-    this.router.navigate(['/dashboard']);
-    this.isLoading.set(false);
-  }
+    await new Promise(resolve => setTimeout(resolve, 300));
 
-  navigateToSignup() {
-    this.router.navigate(['/signup']);
-  }
+    const validLoginId = 'demo';
+    const validPassword = 'demo123';
 
-  continueWithFacebook() {
-    // Placeholder: integrate real Facebook OAuth via your backend or Firebase
-    this.isLoading.set(true);
-    setTimeout(() => {
-      localStorage.setItem('user', JSON.stringify({ provider: 'facebook', email: this.email() || 'fb_user@example.com' }));
+    if (this.loginId().trim() === validLoginId && this.password() === validPassword) {
+      localStorage.setItem('user', JSON.stringify({ loginId: this.loginId() }));
       this.router.navigate(['/dashboard']);
       this.isLoading.set(false);
-    }, 1200);
+      return;
+    }
+
+    this.errorMessage.set('Invalid Login ID or Password');
+    this.isLoading.set(false);
   }
 }
