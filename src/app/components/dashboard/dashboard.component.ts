@@ -1,6 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AdvancedPaymentCashComponent } from './advanced-payment/cash/cash.component';
+import { AdvancedPaymentSupplementsComponent } from './advanced-payment/supplements/supplements.component';
 import { Router } from '@angular/router';
 
 interface Module {
@@ -23,7 +25,7 @@ interface MilkForm {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+	imports: [CommonModule, FormsModule, AdvancedPaymentCashComponent, AdvancedPaymentSupplementsComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -32,6 +34,7 @@ export class DashboardComponent {
   selectedModule = signal<string | null>(null);
   milkSession = signal<'morning' | 'evening'>('morning');
   selectedMilkSubModule = signal<'morning' | 'evening' | null>(null);
+	selectedAdvancedSubModule = signal<'cash' | 'supplements' | null>(null);
 
   // Customers state
   customers = signal<Array<{ farmerId: string; farmerName: string }>>([]);

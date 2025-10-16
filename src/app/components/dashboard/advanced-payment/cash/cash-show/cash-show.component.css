@@ -1,0 +1,7 @@
+.entries h4 { margin: 10px 0; color: #2d3748; }
+.table-wrapper { overflow: auto; border: 1px solid #e2e8f0; border-radius: 10px; background: white; }
+.milk-table { width: 100%; border-collapse: collapse; }
+.milk-table th, .milk-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; text-align: left; white-space: nowrap; }
+.milk-table thead th { background: #f8fafc; color: #475569; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; }
+.empty { padding: 16px; color: #475569; }
+

@@ -1,0 +1,17 @@
+<div class="milk-entry">
+  <div class="milk-entry-header">
+    <h3>Advance by Cash</h3>
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab() === 'add'" (click)="switchTab('add')">Add Advance Entry</button>
+      <button class="tab" [class.active]="activeTab() === 'show'" (click)="switchTab('show')">Show Advance</button>
+    </div>
+  </div>
+
+  @if (activeTab() === 'add') {
+    <app-cash-add-entry (save)="handleAddEntry($event)"></app-cash-add-entry>
+  } @else {
+    <app-cash-show [entries]="entries()"></app-cash-show>
+  }
+</div>
+
+
