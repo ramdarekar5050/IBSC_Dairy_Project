@@ -1,6 +1,45 @@
 <div class="module-wrapper">
   <h3>Add Centre</h3>
-  <p>Coming soon.</p>
+  <form>
+    <div class="field-row">
+      <div class="field">
+        <label>Centre ID</label>
+        <input type="text" [ngModel]="centreId()" (ngModelChange)="centreId.set($event)" name="centre_ID"/>
+      </div>
+      <div class="field">
+        <label>Location</label>
+        <input type="text" [ngModel]="location()" (ngModelChange)="location.set($event)" name="location"/>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="save-btn" type="button" (click)="addCentre()">ADD</button>
+    </div>
+  </form>
+
+  <div class="entries">
+    <h4>Centres</h4>
+    <div class="table-wrapper" *ngIf="(centres() | slice:0).length; else noCentres">
+      <table class="milk-table">
+        <thead>
+          <tr>
+            <th>Centre ID</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of centres(); track $index) {
+            <tr>
+              <td>{{ c.centreId }}</td>
+              <td>{{ c.location }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noCentres>
+      <div class="empty">
+        <span>No centres added yet.</span>
+      </div>
+    </ng-template>
+  </div>
 </div>
-
-
