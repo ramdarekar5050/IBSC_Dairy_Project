@@ -2,4 +2,37 @@
   padding: 16px;
 }
 
+.field-row {
+  display: flex;
+  gap: 12px;
+}
 
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.entries {
+  margin-top: 16px;
+}
+
+.table-wrapper {
+  overflow: auto;
+}
+
+.milk-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.milk-table th,
+.milk-table td {
+  border: 1px solid #e0e0e0;
+  padding: 8px;
+  text-align: left;
+}
+
+.empty {
+  padding: 12px 0;
+  color: #777;
+}
