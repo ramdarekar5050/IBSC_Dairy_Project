@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AdvancedPaymentCashComponent } from './advanced-payment/cash/cash.component';
 import { AdvancedPaymentSupplementsComponent } from './advanced-payment/supplements/supplements.component';
 import { Router } from '@angular/router';
+import { AddCentreComponent } from './add-centre/add-centre.component';
 
 interface Module {
   id: string;
@@ -25,7 +26,7 @@ interface MilkForm {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-	imports: [CommonModule, FormsModule, AdvancedPaymentCashComponent, AdvancedPaymentSupplementsComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
