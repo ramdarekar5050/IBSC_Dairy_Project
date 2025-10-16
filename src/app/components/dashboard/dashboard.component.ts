@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AddCentreComponent } from './add-centre/add-centre.component';
 
 interface Module {
   id: string;
@@ -23,7 +24,7 @@ interface MilkForm {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AddCentreComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

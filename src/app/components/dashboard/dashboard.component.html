@@ -161,7 +161,16 @@
           }
         </div>
       } @else {
-        @if (selectedModule() === 'add-customer') {
+        @if (selectedModule() === 'add-centre') {
+          <div class="milk-entry">
+            <div class="milk-entry-header">
+              <h3>Add Centre</h3>
+              <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
+            </div>
+
+            <app-add-centre></app-add-centre>
+          </div>
+        } @else if (selectedModule() === 'add-customer') {
           <div class="milk-entry">
             <div class="milk-entry-header">
               <h3>Add Customer</h3>
