@@ -26,7 +26,7 @@ interface MilkForm {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AddCentreComponent, AdvancedPaymentCashComponent, AdvancedPaymentSupplementsComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -35,7 +35,7 @@ export class DashboardComponent {
   selectedModule = signal<string | null>(null);
   milkSession = signal<'morning' | 'evening'>('morning');
   selectedMilkSubModule = signal<'morning' | 'evening' | null>(null);
-	selectedAdvancedSubModule = signal<'cash' | 'supplements' | null>(null);
+  selectedAdvancedSubModule = signal<'cash' | 'supplements' | null>(null);
 
   // Customers state
   customers = signal<Array<{ farmerId: string; farmerName: string }>>([]);
