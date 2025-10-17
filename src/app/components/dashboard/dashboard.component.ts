@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdvancedPaymentCashComponent } from './advanced-payment/cash/cash.component';
 import { AdvancedPaymentSupplementsComponent } from './advanced-payment/supplements/supplements.component';
+import { DailyReportsComponent } from './daily-reports/daily-reports.component';
+import { MonthlyReportsComponent } from './monthly-reports/monthly-reports.component';
 import { Router } from '@angular/router';
-import { AddCentreComponent } from './add-centre/add-centre.component';
 
 interface Module {
   id: string;
@@ -26,7 +27,7 @@ interface MilkForm {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddCentreComponent, AdvancedPaymentCashComponent, AdvancedPaymentSupplementsComponent],
+  imports: [CommonModule, FormsModule, AdvancedPaymentCashComponent, AdvancedPaymentSupplementsComponent, DailyReportsComponent, MonthlyReportsComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -36,6 +37,7 @@ export class DashboardComponent {
   milkSession = signal<'morning' | 'evening'>('morning');
   selectedMilkSubModule = signal<'morning' | 'evening' | null>(null);
   selectedAdvancedSubModule = signal<'cash' | 'supplements' | null>(null);
+  selectedReportsSubModule = signal<'daily' | 'monthly' | null>(null);
 
   // Customers state
   customers = signal<Array<{ farmerId: string; farmerName: string }>>([]);
@@ -68,12 +70,6 @@ export class DashboardComponent {
 
   modules: Module[] = [
     {
-      id: 'add-centre',
-      name: 'Add Centre',
-      icon: '🏢',
-      description: 'Manage dairy centres'
-    },
-    {
       id: 'milk-entry',
       name: 'Milk Entry',
       icon: '🥛',
@@ -86,10 +82,10 @@ export class DashboardComponent {
       description: 'Generate bills and invoices'
     },
     {
-      id: 'daily-reports',
-      name: 'Daily Reports',
+      id: 'reports',
+      name: 'Reports',
       icon: '📊',
-      description: 'View daily analytics'
+      description: 'Daily and monthly reports'
     },
     {
       id: 'advanced-payment',
@@ -102,6 +98,24 @@ export class DashboardComponent {
       name: 'Add Customer',
       icon: '👥',
       description: 'Manage customer database'
+    },
+    {
+      id: 'rate-chart',
+      name: 'Rate Chart Management',
+      icon: '📈',
+      description: 'Manage milk rate charts'
+    },
+    {
+      id: 'feed-distribution',
+      name: 'Feed Distribution',
+      icon: '🛒',
+      description: 'Plan and track feed'
+    },
+    {
+      id: 'transaction-history',
+      name: 'Transaction History',
+      icon: '🧾',
+      description: 'Review past transactions'
     }
   ];
 
@@ -123,6 +137,9 @@ export class DashboardComponent {
     if (moduleId === 'milk-entry') {
       this.resetMilkForm();
       this.selectedMilkSubModule.set(null);
+    }
+    if (moduleId === 'reports') {
+      this.selectedReportsSubModule.set('daily');
     }
   }
 

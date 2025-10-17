@@ -161,16 +161,7 @@
           }
         </div>
       } @else {
-        @if (selectedModule() === 'add-centre') {
-          <div class="milk-entry">
-            <div class="milk-entry-header">
-              <h3>Add Centre</h3>
-              <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
-            </div>
-
-            <app-add-centre></app-add-centre>
-          </div>
-        } @else if (selectedModule() === 'add-customer') {
+        @if (selectedModule() === 'add-customer') {
           <div class="milk-entry">
             <div class="milk-entry-header">
               <h3>Add Customer</h3>
@@ -242,6 +233,24 @@
                 </div>
               </ng-template>
             </div>
+          </div>
+        } @else if (selectedModule() === 'reports') {
+          <div class="milk-entry">
+            <div class="milk-entry-header">
+              <h3>Reports</h3>
+              <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
+            </div>
+
+            <div class="tabs">
+              <button class="tab" [class.active]="selectedReportsSubModule() === 'daily'" (click)="selectedReportsSubModule.set('daily')">Daily Reports</button>
+              <button class="tab" [class.active]="selectedReportsSubModule() === 'monthly'" (click)="selectedReportsSubModule.set('monthly')">Monthly Reports</button>
+            </div>
+
+            @if (selectedReportsSubModule() === 'daily') {
+              <app-daily-reports></app-daily-reports>
+            } @else {
+              <app-monthly-reports></app-monthly-reports>
+            }
           </div>
         } @else {
           @if (selectedModule() === 'advanced-payment') {

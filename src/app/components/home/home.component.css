@@ -43,16 +43,19 @@
   padding: 12px 22px;
   border: none;
   border-radius: 999px;
-  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
   color: #ffffff;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0, 114, 255, 0.35);
+  box-shadow: var(--shadow-md);
   transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.4px;
 }
 
 .get-started:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(0, 114, 255, 0.45);
+  box-shadow: var(--shadow-lg);
   filter: brightness(1.05);
 }
 
