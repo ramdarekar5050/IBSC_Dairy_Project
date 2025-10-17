@@ -31,6 +31,7 @@ interface MilkForm {
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
+
 export class DashboardComponent {
   user = signal<any>(null);
   selectedModule = signal<string | null>(null);
