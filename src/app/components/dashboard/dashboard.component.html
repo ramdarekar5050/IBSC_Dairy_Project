@@ -241,15 +241,37 @@
               <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
             </div>
 
-            <div class="tabs">
-              <button class="tab" [class.active]="selectedReportsSubModule() === 'daily'" (click)="selectedReportsSubModule.set('daily')">Daily Reports</button>
-              <button class="tab" [class.active]="selectedReportsSubModule() === 'monthly'" (click)="selectedReportsSubModule.set('monthly')">Monthly Reports</button>
-            </div>
-
-            @if (selectedReportsSubModule() === 'daily') {
-              <app-daily-reports></app-daily-reports>
+            @if (!selectedReportsSubModule()) {
+              <div class="modules-section">
+                <h3>Select Report Type</h3>
+                <div class="modules-grid" [class.reports-grid]="selectedModule() === 'reports' && !selectedReportsSubModule()">
+                  <div class="module-card" (click)="selectedReportsSubModule.set('daily')">
+                    <div class="module-icon">📅</div>
+                    <div class="module-content">
+                      <h4>Daily Reports</h4>
+                      <p>View daily milk collection reports</p>
+                    </div>
+                  </div>
+                  <div class="module-card" (click)="selectedReportsSubModule.set('monthly')">
+                    <div class="module-icon">🗓️</div>
+                    <div class="module-content">
+                      <h4>Monthly Reports</h4>
+                      <p>View monthly milk collection reports</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             } @else {
-              <app-monthly-reports></app-monthly-reports>
+
+              @if (selectedReportsSubModule() === 'daily') {
+                <app-daily-reports></app-daily-reports>
+              } @else {
+                <app-monthly-reports></app-monthly-reports>
+              }
+
+              <div class="actions">
+                <button class="back-btn" (click)="selectedReportsSubModule.set(null)">Back to Report Selection</button>
+              </div>
             }
           </div>
         } @else {
@@ -296,6 +318,12 @@
                   <button class="back-btn" (click)="selectedAdvancedSubModule.set(null)">Back to Submodule Select</button>
                 </div>
               }
+            </div>
+          } @else if (selectedModule() === 'rate-chart') {
+            <div class="module-welcome">
+              <h3>Welcome to {{ getModuleName(selectedModule()!) }} Module</h3>
+              <p>This module is currently under development. More features will be available soon!</p>
+              <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
             </div>
           } @else {
             <div class="module-welcome">

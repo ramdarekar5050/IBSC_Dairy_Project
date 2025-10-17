@@ -5,12 +5,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-monthly-reports',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="module-welcome">
-      <h3>Monthly Reports</h3>
-      <p>This section will show monthly summaries and trends.</p>
-    </div>
-  `
+  template: ``
 })
 export class MonthlyReportsComponent {}
 

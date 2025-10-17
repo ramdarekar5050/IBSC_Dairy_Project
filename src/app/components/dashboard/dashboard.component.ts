@@ -139,7 +139,7 @@ export class DashboardComponent {
       this.selectedMilkSubModule.set(null);
     }
     if (moduleId === 'reports') {
-      this.selectedReportsSubModule.set('daily');
+      this.selectedReportsSubModule.set(null);
     }
   }
 
