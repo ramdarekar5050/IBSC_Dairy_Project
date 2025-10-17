@@ -1,5 +1,5 @@
-.module-wrapper {
-  padding: 16px;
+.daily-reports-container {
+  background: linear-gradient(to bottom, #f0f2f5, #ffffff);
+  padding: 24px;
+  border-radius: 8px;
 }
-
-

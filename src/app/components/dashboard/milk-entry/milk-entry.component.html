@@ -1,22 +1,22 @@
 <div class="milk-entry">
-  <div class="milk-entry-header">
+  <div class="milk-entry-header" style="text-align: center;">
     <h3>Milk Entry</h3>
   </div>
 
   @if (!selectedMilkSubModule()) {
-    <div class="modules-section">
+ <div class="modules-section" style="text-align: center;">
       <h3>Select Session</h3>
       <div class="modules-grid">
         <div class="module-card" (click)="openMilkSubModule('morning')">
           <div class="module-icon">🌅</div>
-          <div class="module-content">
+          <div class="module-content" style="text-align: center;">
             <h4>Morning Entry</h4>
             <p>Add morning milk entries</p>
           </div>
         </div>
         <div class="module-card" (click)="openMilkSubModule('evening')">
           <div class="module-icon">🌇</div>
-          <div class="module-content">
+          <div class="module-content" style="text-align: center;">
             <h4>Evening Entry</h4>
             <p>Add evening milk entries</p>
           </div>

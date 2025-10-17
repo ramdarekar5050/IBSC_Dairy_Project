@@ -7,7 +7,7 @@
   --color-surface-veil: rgba(255, 255, 255, 0.92);
   --color-text: #1f2937; /* gray-800 */
   --color-text-muted: #6b7280; /* gray-500 */
-  --color-border: #e5e7eb; /* gray-200 */
+  --color-border: transparent; /* gray-200 */
 
   --color-primary: #2563eb; /* blue-600 */
   --color-primary-700: #1d4ed8;
@@ -112,7 +112,6 @@ button {
 /* Cards/Surfaces */
 .card {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
 }

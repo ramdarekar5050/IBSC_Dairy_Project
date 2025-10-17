@@ -1,6 +1,6 @@
 .dashboard-container {
   min-height: 100vh;
-  background: var(--color-bg);
+  background: linear-gradient(to bottom, #f0f2f5, #ffffff);
 }
 
 .dashboard-header {
@@ -107,7 +107,6 @@
   border-radius: var(--radius-lg);
   padding: 24px;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   gap: 16px;
@@ -162,7 +161,6 @@
   border-radius: var(--radius-lg);
   padding: 32px;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--color-border);
 }
 
 .quick-actions h3 {
@@ -209,7 +207,6 @@
   border-radius: var(--radius-lg);
   padding: 32px;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--color-border);
 }
 
 .modules-section h3 {
@@ -226,18 +223,12 @@
   gap: 20px;
   align-items: stretch;
 }
-/* Center the session selection grid inside Milk Entry */
-.milk-entry .modules-grid {
-  grid-template-columns: repeat(2, minmax(200px, 260px));
-  justify-content: center;
-}
 
 .module-card {
   background: var(--color-surface);
-  border-radius: var(--radius-md);
+  border-radius: 24px;
   padding: 20px;
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--color-border);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-align: center;
@@ -251,6 +242,20 @@
 .module-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
+}
+
+/* Make module cards visually distinct with a stronger border and accessible focus */
+.module-card:focus,
+.module-card:focus-within,
+.module-card:active {
+  outline: none;
+  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.12), 0 0 0 4px rgba(37, 99, 235, 0.08);
+  transform: translateY(-2px);
+}
+
+.module-card:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.18);
+  outline-offset: 3px;
 }
 
 /* Removed ambient glow pseudo-element for cleaner production look */
@@ -342,7 +347,6 @@
   border-radius: var(--radius-lg);
   padding: 24px;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--color-border);
 }
 
 .milk-entry-header {
@@ -353,14 +357,12 @@
 }
 
 .tabs {
-  display: flex;
+  display: inline-flex;
   background: #f3f4f6;
   border-radius: 10px;
   padding: 6px;
   gap: 6px;
   margin-bottom: 20px;
-  width: 100%;
-  justify-content: center;
 }
 
 .tab {
@@ -620,4 +622,10 @@
   .module-welcome h3 {
     font-size: 24px;
   }
+}
+
+.modules-grid.reports-grid {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 500px; /* Adjust as needed to control the width of the centered grid */
+  margin: 0 auto;
 }
