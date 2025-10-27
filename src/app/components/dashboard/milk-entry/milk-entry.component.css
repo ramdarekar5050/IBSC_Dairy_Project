@@ -15,14 +15,22 @@
 }
 
 .modules-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modules-section h3 {
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .modules-grid {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 24px;
-  margin-top: 16px;
+  flex-wrap: nowrap;
 }
 
 .module-card {
@@ -43,6 +51,10 @@
 
 .module-icon {
   font-size: 48px;
+}
+
+.module-content {
+  text-align: center;
 }
 
 .module-content h4 {
