@@ -343,6 +343,8 @@
                 </div>
               }
             </div>
+          } @else if (selectedModule() === 'feed-distribution') {
+            <app-feed-distribution (backToDashboard)="selectedModule.set(null)"></app-feed-distribution>
           } @else if (selectedModule() === 'rate-chart') {
             <div class="module-welcome">
               <h3>Welcome to {{ getModuleName(selectedModule()!) }} Module</h3>
