@@ -114,6 +114,7 @@
                 <table class="milk-table">
                   <thead>
                     <tr>
+                      <th>Session</th>
                       <th>Date</th>
                       <th>Farmer ID</th>
                       <th>Name</th>
@@ -129,6 +130,7 @@
                     @for (entry of milkEntries(); track $index) {
                       @if (entry.session === milkSession()) {
                         <tr>
+                          <td>{{ entry.session === 'morning' ? '🌅 Morning' : '🌇 Evening' }}</td>
                           <td>{{ entry.date }}</td>
                           <td>{{ entry.farmerId }}</td>
                           <td>{{ entry.farmerName || '-' }}</td>
