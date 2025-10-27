@@ -10,20 +10,32 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './add-customer.component.css'
 })
 export class AddCustomerComponent {
-  customers = signal<Array<{ farmerId: string; farmerName: string }>>([]);
-  newCustomer = signal<{ farmerId: string; farmerName: string }>({ farmerId: '', farmerName: '' });
+  customers = signal<Array<{ farmerId: string; farmerName: string; address: string; mobileNumber: string }>>([]);
+  newCustomer = signal<{ farmerId: string; farmerName: string; address: string; mobileNumber: string }>({ 
+    farmerId: '', 
+    farmerName: '', 
+    address: '', 
+    mobileNumber: '' 
+  });
   editingCustomerIndex = signal<number | null>(null);
-  editingCustomer = signal<{ farmerId: string; farmerName: string }>({ farmerId: '', farmerName: '' });
+  editingCustomer = signal<{ farmerId: string; farmerName: string; address: string; mobileNumber: string }>({ 
+    farmerId: '', 
+    farmerName: '', 
+    address: '', 
+    mobileNumber: '' 
+  });
 
-  updateNewCustomer<K extends keyof { farmerId: string; farmerName: string }>(key: K, value: { farmerId: string; farmerName: string }[K]) {
+  updateNewCustomer<K extends keyof { farmerId: string; farmerName: string; address: string; mobileNumber: string }>(key: K, value: { farmerId: string; farmerName: string; address: string; mobileNumber: string }[K]) {
     const current = this.newCustomer();
     this.newCustomer.set({ ...current, [key]: (value as string).trimStart() });
   }
 
   addCustomer() {
-    const { farmerId, farmerName } = this.newCustomer();
+    const { farmerId, farmerName, address, mobileNumber } = this.newCustomer();
     const id = farmerId.trim();
     const name = farmerName.trim();
+    const addr = address.trim();
+    const mobile = mobileNumber.trim();
     if (!id || !name) {
       alert('Enter both Farmer ID and Farmer Name');
       return;
@@ -33,8 +45,8 @@ export class AddCustomerComponent {
       alert('Farmer ID already exists');
       return;
     }
-    this.customers.update(list => [...list, { farmerId: id, farmerName: name }]);
-    this.newCustomer.set({ farmerId: '', farmerName: '' });
+    this.customers.update(list => [...list, { farmerId: id, farmerName: name, address: addr, mobileNumber: mobile }]);
+    this.newCustomer.set({ farmerId: '', farmerName: '', address: '', mobileNumber: '' });
   }
 
   removeCustomer(index: number) {
@@ -50,28 +62,35 @@ export class AddCustomerComponent {
     const target = current[index];
     if (!target) return;
     this.editingCustomerIndex.set(index);
-    this.editingCustomer.set({ farmerId: target.farmerId, farmerName: target.farmerName });
+    this.editingCustomer.set({ 
+      farmerId: target.farmerId, 
+      farmerName: target.farmerName,
+      address: target.address,
+      mobileNumber: target.mobileNumber
+    });
   }
 
-  updateEditingCustomer(key: 'farmerId' | 'farmerName', value: string) {
+  updateEditingCustomer(key: 'farmerId' | 'farmerName' | 'address' | 'mobileNumber', value: string) {
     const current = this.editingCustomer();
     this.editingCustomer.set({ ...current, [key]: value });
   }
 
   saveEditCustomer(index: number) {
-    const { farmerId, farmerName } = this.editingCustomer();
+    const { farmerId, farmerName, address, mobileNumber } = this.editingCustomer();
     const id = farmerId.trim();
     const name = farmerName.trim();
+    const addr = address.trim();
+    const mobile = mobileNumber.trim();
     if (!id || !name) return;
     const list = [...this.customers()];
-    list[index] = { farmerId: id, farmerName: name };
+    list[index] = { farmerId: id, farmerName: name, address: addr, mobileNumber: mobile };
     this.customers.set(list);
     this.cancelEditCustomer();
   }
 
   cancelEditCustomer() {
     this.editingCustomerIndex.set(null);
-    this.editingCustomer.set({ farmerId: '', farmerName: '' });
+    this.editingCustomer.set({ farmerId: '', farmerName: '', address: '', mobileNumber: '' });
   }
 }
 

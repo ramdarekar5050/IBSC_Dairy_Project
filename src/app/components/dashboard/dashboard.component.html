@@ -180,6 +180,16 @@
                   <input type="text" placeholder="Enter farmer name" [ngModel]="newCustomer().farmerName" (ngModelChange)="updateNewCustomer('farmerName', $event)" />
                 </div>
               </div>
+              <div class="field-row">
+                <div class="field">
+                  <label>Address</label>
+                  <input type="text" placeholder="Enter address" [ngModel]="newCustomer().address" (ngModelChange)="updateNewCustomer('address', $event)" />
+                </div>
+                <div class="field">
+                  <label>Mobile Number</label>
+                  <input type="tel" placeholder="Enter mobile number" [ngModel]="newCustomer().mobileNumber" (ngModelChange)="updateNewCustomer('mobileNumber', $event)" />
+                </div>
+              </div>
 
               <div class="actions">
                 <button class="save-btn" (click)="addCustomer()">Add Customer</button>
@@ -194,6 +204,8 @@
                     <tr>
                       <th>Farmer ID</th>
                       <th>Farmer Name</th>
+                      <th>Address</th>
+                      <th>Mobile Number</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -209,6 +221,16 @@
                           @if (editingCustomerIndex() === $index) {
                             <input type="text" [ngModel]="editingCustomer().farmerName" (ngModelChange)="updateEditingCustomer('farmerName', $event)" />
                           } @else { {{ c.farmerName }} }
+                        </td>
+                        <td>
+                          @if (editingCustomerIndex() === $index) {
+                            <input type="text" [ngModel]="editingCustomer().address" (ngModelChange)="updateEditingCustomer('address', $event)" />
+                          } @else { {{ c.address || '-' }} }
+                        </td>
+                        <td>
+                          @if (editingCustomerIndex() === $index) {
+                            <input type="tel" [ngModel]="editingCustomer().mobileNumber" (ngModelChange)="updateEditingCustomer('mobileNumber', $event)" />
+                          } @else { {{ c.mobileNumber || '-' }} }
                         </td>
                         <td>
                           @if (editingCustomerIndex() === $index) {
