@@ -37,7 +37,7 @@ export class DashboardComponent {
   selectedModule = signal<string | null>(null);
   milkSession = signal<'morning' | 'evening'>('morning');
   selectedMilkSubModule = signal<'morning' | 'evening' | null>(null);
-  selectedAdvancedSubModule = signal<'cash' | 'supplements' | null>(null);
+  selectedAdvancedSubModule = signal<'entry' | 'received' | null>(null);
   selectedReportsSubModule = signal<'daily' | 'monthly' | null>(null);
 
   // Customers state

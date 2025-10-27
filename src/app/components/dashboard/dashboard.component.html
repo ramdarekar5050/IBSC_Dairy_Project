@@ -310,34 +310,33 @@
               @if (!selectedAdvancedSubModule()) {
                 <div class="modules-section">
                   <h3>Select Submodule</h3>
-                  <div class="modules-grid">
-                    <div class="module-card" (click)="selectedAdvancedSubModule.set('cash')">
-                      <div class="module-icon">💵</div>
+                  <div class="modules-grid advanced-payment-grid">
+                    <div class="module-card" (click)="selectedAdvancedSubModule.set('entry')">
+                      <div class="module-icon">📝</div>
                       <div class="module-content">
-                        <h4>Advance by Cash</h4>
-                        <p>Add and view cash advances</p>
+                        <h4>Advance Entry</h4>
+                        <p>Record new advance payments</p>
                       </div>
                     </div>
-                    <div class="module-card" (click)="selectedAdvancedSubModule.set('supplements')">
-                      <div class="module-icon">🧪</div>
+                    <div class="module-card" (click)="selectedAdvancedSubModule.set('received')">
+                      <div class="module-icon">💰</div>
                       <div class="module-content">
-                        <h4>Supplements</h4>
-                        <p>Manage supplement advances</p>
+                        <h4>Advance Received</h4>
+                        <p>View advance payments received</p>
                       </div>
                     </div>
                   </div>
                 </div>
               } @else {
                 <div class="tabs">
-                  <button class="tab" [class.active]="selectedAdvancedSubModule() === 'cash'" (click)="selectedAdvancedSubModule.set('cash')">Advance by Cash</button>
-                  <button class="tab" [class.active]="selectedAdvancedSubModule() === 'supplements'" (click)="selectedAdvancedSubModule.set('supplements')">Supplements</button>
+                  <button class="tab" [class.active]="selectedAdvancedSubModule() === 'entry'" (click)="selectedAdvancedSubModule.set('entry')">Advance Entry</button>
+                  <button class="tab" [class.active]="selectedAdvancedSubModule() === 'received'" (click)="selectedAdvancedSubModule.set('received')">Advance Received</button>
                 </div>
 
-                @if (selectedAdvancedSubModule() === 'cash') {
-                  <app-advanced-payment-cash></app-advanced-payment-cash>
-                } @else {
-                  <app-advanced-payment-supplements></app-advanced-payment-supplements>
-                }
+                <div class="milk-form">
+                  <h4>{{ selectedAdvancedSubModule() === 'entry' ? 'Advance Entry' : 'Advance Received' }}</h4>
+                  <p class="coming-soon">This feature is coming soon.</p>
+                </div>
 
                 <div class="actions">
                   <button class="back-btn" (click)="selectedAdvancedSubModule.set(null)">Back to Submodule Select</button>

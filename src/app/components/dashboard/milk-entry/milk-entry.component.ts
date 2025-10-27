@@ -89,6 +89,13 @@ export class MilkEntryComponent {
       alert('Please fill all fields');
       return;
     }
+    
+    // Ask for confirmation with Yes/No
+    const confirmed = confirm(`Save ${this.milkSession() === 'morning' ? 'Morning' : 'Evening'} entry?\n\nFarmer: ${form.farmerId}\nLiters: ${form.liters}\nFat: ${form.fat}%\nSNF: ${form.snf}%`);
+    if (!confirmed) {
+      return;
+    }
+    
     const litersNum = Number(form.liters);
     const fatNum = Number(form.fat);
     const snfNum = Number(form.snf);

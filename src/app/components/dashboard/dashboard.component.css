@@ -403,6 +403,26 @@
   color: #666;
 }
 
+/* Center advance entry and advance received cards */
+.advanced-payment-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: nowrap;
+}
+
+.advanced-payment-grid .module-card {
+  width: 220px;
+}
+
+.coming-soon {
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  padding: 20px;
+}
+
 .tabs {
   display: inline-flex;
   background: #f3f4f6;
