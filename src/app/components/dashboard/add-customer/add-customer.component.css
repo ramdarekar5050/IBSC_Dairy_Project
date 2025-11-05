@@ -1,4 +1,4 @@
-/* ======= Main Container ======= */
+/* Main Container */
 .add-customer-container {
   background: #fff;
   border-radius: 20px;
@@ -9,7 +9,6 @@
   position: relative;
 }
 
-/* ======= Header ======= */
 .add-customer-container h2 {
   font-size: 26px;
   font-weight: 700;
@@ -17,7 +16,6 @@
   margin-bottom: 30px;
 }
 
-/* ======= Back Button ======= */
 .back-btn {
   position: absolute;
   top: 30px;
@@ -37,21 +35,18 @@
   transform: translateY(-1px);
 }
 
-/* ======= Form Layout ======= */
 .milk-form {
   display: flex;
   flex-direction: column;
   gap: 25px;
 }
 
-/* Two equal columns in a row */
 .row {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
 
-/* Field Styling */
 .field {
   display: flex;
   flex-direction: column;
@@ -85,7 +80,6 @@
   outline: none;
 }
 
-/* ======= Add Customer Button ======= */
 .save-btn {
   background: #059669;
   color: #fff;
@@ -103,7 +97,6 @@
   transform: translateY(-1px);
 }
 
-/* ======= Customers Section ======= */
 .entries {
   margin-top: 40px;
 }
@@ -120,7 +113,6 @@
   font-size: 15px;
 }
 
-/* ======= Responsive ======= */
 @media (max-width: 768px) {
   .row {
     grid-template-columns: 1fr;
