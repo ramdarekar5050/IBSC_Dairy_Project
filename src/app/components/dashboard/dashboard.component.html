@@ -202,7 +202,7 @@
         </div>
       } @else {
         @if (selectedModule() === 'add-customer') {
-          <div class="milk-entry">
+          <div class="milk-entry add-customer-section">
             <div class="milk-entry-header">
               <h3>Add Customer</h3>
               <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
@@ -212,21 +212,21 @@
               <div class="field-row">
                 <div class="field">
                   <label>Farmer ID</label>
-                  <input type="text" placeholder="Enter farmer ID" [ngModel]="newCustomer().farmerId" (ngModelChange)="updateNewCustomer('farmerId', $event)" />
+                  <input type="text" placeholder="Enter farmer ID" aria-label="Farmer ID" [ngModel]="newCustomer().farmerId" (ngModelChange)="updateNewCustomer('farmerId', $event)" />
                 </div>
                 <div class="field">
                   <label>Farmer Name</label>
-                  <input type="text" placeholder="Enter farmer name" [ngModel]="newCustomer().farmerName" (ngModelChange)="updateNewCustomer('farmerName', $event)" />
+                  <input type="text" placeholder="Enter farmer name" aria-label="Farmer Name" [ngModel]="newCustomer().farmerName" (ngModelChange)="updateNewCustomer('farmerName', $event)" />
                 </div>
               </div>
               <div class="field-row">
                 <div class="field">
                   <label>Address</label>
-                  <input type="text" placeholder="Enter address" [ngModel]="newCustomer().address" (ngModelChange)="updateNewCustomer('address', $event)" />
+                  <input type="text" placeholder="Enter address" aria-label="Address" [ngModel]="newCustomer().address" (ngModelChange)="updateNewCustomer('address', $event)" />
                 </div>
                 <div class="field">
                   <label>Mobile Number</label>
-                  <input type="tel" placeholder="Enter mobile number" [ngModel]="newCustomer().mobileNumber" (ngModelChange)="updateNewCustomer('mobileNumber', $event)" />
+                  <input type="tel" placeholder="Enter mobile number" aria-label="Mobile Number" [ngModel]="newCustomer().mobileNumber" (ngModelChange)="updateNewCustomer('mobileNumber', $event)" />
                 </div>
               </div>
 

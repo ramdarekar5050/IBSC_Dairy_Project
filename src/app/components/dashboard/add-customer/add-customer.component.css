@@ -1,175 +1,142 @@
+/* ======= Main Container ======= */
 .add-customer-container {
-  background: linear-gradient(to bottom, #f0f2f5, #ffffff);
-  padding: 24px;
-  border-radius: 8px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 30px auto;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+  position: relative;
 }
 
-.milk-entry-header {
-  text-align: center;
-  margin-bottom: 24px;
+/* ======= Header ======= */
+.add-customer-container h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 30px;
 }
 
-.milk-entry-header h3 {
-  font-size: 28px;
-  color: #333;
+/* ======= Back Button ======= */
+.back-btn {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  background: linear-gradient(90deg, #2563eb, #6366f1);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.back-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
+/* ======= Form Layout ======= */
 .milk-form {
-  background-color: white;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 24px;
-}
-
-.field-row {
   display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
+  flex-direction: column;
+  gap: 25px;
 }
 
+/* Two equal columns in a row */
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+/* Field Styling */
 .field {
-  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .field label {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 8px;
   font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 15px;
 }
 
 .field input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 20px;
+  border-radius: 30px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  background-color: #fff;
 }
 
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
+.field input::placeholder {
+  color: #9ca3af;
 }
 
-.save-btn, .reset-btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  font-weight: 600;
+.field input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  outline: none;
 }
 
+/* ======= Add Customer Button ======= */
 .save-btn {
-  background-color: #28a745;
-  color: white;
-}
-
-.save-btn:hover {
-  background-color: #218838;
-}
-
-.reset-btn {
-  background-color: #dc3545;
-  color: white;
-}
-
-.reset-btn:hover {
-  background-color: #c82333;
-}
-
-.entries {
-  margin-top: 24px;
-}
-
-.entries h4 {
-  font-size: 20px;
-  color: #333;
-  margin-bottom: 16px;
-}
-
-.table-wrapper {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.milk-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.milk-table th, .milk-table td {
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-.milk-table th {
-  background-color: #f7f7f7;
-  font-weight: 600;
-  color: #333;
-}
-
-.milk-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.milk-table tbody tr:hover {
-  background-color: #f9f9f9;
-}
-
-.milk-table td input {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  width: 100%;
-}
-
-.row-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.edit-btn, .delete-btn {
+  background: #059669;
+  color: #fff;
   border: none;
-  background: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 15px;
+  width: fit-content;
+  transition: 0.2s ease;
   cursor: pointer;
-  font-size: 16px;
-  padding: 4px 8px;
+}
+.save-btn:hover {
+  background: #047857;
+  transform: translateY(-1px);
 }
 
-.edit-btn {
-  color: #007bff;
+/* ======= Customers Section ======= */
+.entries {
+  margin-top: 40px;
 }
 
-.edit-btn:hover {
-  color: #0056b3;
-}
-
-.delete-btn {
-  color: #dc3545;
-}
-
-.delete-btn:hover {
-  color: #c82333;
+.entries h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 10px;
 }
 
 .empty {
-  text-align: center;
-  padding: 48px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #6b7280;
+  font-size: 15px;
 }
 
-.empty span {
-  font-size: 16px;
-  color: #666;
+/* ======= Responsive ======= */
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .back-btn {
+    position: static;
+    align-self: flex-end;
+    margin-bottom: 10px;
+  }
+
+  .add-customer-container {
+    padding: 25px;
+  }
+
+  .save-btn {
+    width: 100%;
+  }
 }

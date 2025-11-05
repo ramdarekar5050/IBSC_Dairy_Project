@@ -349,6 +349,27 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Scoped tweaks for Add Customer section only: equal field widths and visible borders */
+.milk-entry.add-customer-section .field-row {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.milk-entry.add-customer-section .field input {
+  border: 1px solid #d1d5db;
+  height: 44px; /* enforce same visual height */
+  padding: 10px 16px; /* equal padding for all inputs */
+  line-height: 22px; /* stabilize text metrics */
+  box-sizing: border-box; /* include padding/border in height */
+  font-size: 16px;
+}
+
+/* Ensure the second row in Add Customer remains 2 equal columns (override global nth-child rule) */
+.milk-entry.add-customer-section .milk-form .field-row:nth-child(2) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* removed add-customer-page overrides to restore previous look */
+
 .milk-entry-header {
   display: flex;
   align-items: center;

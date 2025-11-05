@@ -1,97 +1,37 @@
 <div class="add-customer-container">
-  <div class="milk-entry-header">
-    <h3>Add Customer</h3>
-  </div>
-  <div class="milk-form">
-    <div class="field-row">
+  <button class="back-btn">Back to Dashboard</button>
+  <h2>Add Customer</h2>
+
+  <form class="milk-form">
+    <div class="row">
       <div class="field">
         <label>Farmer ID</label>
-        <input type="text" #farmerIdInput [ngModel]="newCustomer().farmerId" (ngModelChange)="updateNewCustomer('farmerId', $event)" 
-               (keydown.enter)="$event.preventDefault(); farmerNameInput.focus()" />
+        <input type="text" placeholder="Enter farmer ID" />
       </div>
+
       <div class="field">
         <label>Farmer Name</label>
-        <input type="text" #farmerNameInput [ngModel]="newCustomer().farmerName" (ngModelChange)="updateNewCustomer('farmerName', $event)" 
-               (keydown.enter)="$event.preventDefault(); addressInput.focus()" />
+        <input type="text" placeholder="Enter farmer name" />
       </div>
     </div>
-    <div class="field-row">
+
+    <div class="row">
       <div class="field">
         <label>Address</label>
-        <input type="text" #addressInput [ngModel]="newCustomer().address" (ngModelChange)="updateNewCustomer('address', $event)" 
-               (keydown.enter)="$event.preventDefault(); mobileNumberInput.focus()" />
+        <input type="text" placeholder="Enter address" />
       </div>
+
       <div class="field">
         <label>Mobile Number</label>
-        <input type="tel" #mobileNumberInput [ngModel]="newCustomer().mobileNumber" (ngModelChange)="updateNewCustomer('mobileNumber', $event)" 
-               (keydown.enter)="$event.preventDefault(); addCustomer()" />
+        <input type="text" placeholder="Enter mobile number" />
       </div>
     </div>
-    <div class="actions">
-      <button class="save-btn" (click)="addCustomer()">Add Customer</button>
-    </div>
-  </div>
+
+    <button class="save-btn">Add Customer</button>
+  </form>
 
   <div class="entries">
-    <h4>Customers</h4>
-    <div class="table-wrapper" *ngIf="(customers() | slice:0).length; else noCustomers">
-      <table class="milk-table">
-        <thead>
-          <tr>
-            <th>Farmer ID</th>
-            <th>Farmer Name</th>
-            <th>Address</th>
-            <th>Mobile Number</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (c of customers(); track $index) {
-            <tr>
-              <td>
-                @if (editingCustomerIndex() === $index) {
-                  <input type="text" [ngModel]="editingCustomer().farmerId" (ngModelChange)="updateEditingCustomer('farmerId', $event)" />
-                } @else { {{ c.farmerId }} }
-              </td>
-              <td>
-                @if (editingCustomerIndex() === $index) {
-                  <input type="text" [ngModel]="editingCustomer().farmerName" (ngModelChange)="updateEditingCustomer('farmerName', $event)" />
-                } @else { {{ c.farmerName }} }
-              </td>
-              <td>
-                @if (editingCustomerIndex() === $index) {
-                  <input type="text" [ngModel]="editingCustomer().address" (ngModelChange)="updateEditingCustomer('address', $event)" />
-                } @else { {{ c.address || '-' }} }
-              </td>
-              <td>
-                @if (editingCustomerIndex() === $index) {
-                  <input type="tel" [ngModel]="editingCustomer().mobileNumber" (ngModelChange)="updateEditingCustomer('mobileNumber', $event)" />
-                } @else { {{ c.mobileNumber || '-' }} }
-              </td>
-              <td>
-                @if (editingCustomerIndex() === $index) {
-                  <div class="row-actions">
-                    <button class="save-btn" (click)="saveEditCustomer($index)">Save</button>
-                    <button class="reset-btn" (click)="cancelEditCustomer()">Cancel</button>
-                  </div>
-                } @else {
-                  <div class="row-actions">
-                    <button class="edit-btn" (click)="startEditCustomer($index)" aria-label="Edit customer">✎</button>
-                    <button class="delete-btn" (click)="removeCustomer($index)" aria-label="Delete customer">✕</button>
-                  </div>
-                }
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-    <ng-template #noCustomers>
-      <div class="empty">
-        <span>No customers added yet.</span>
-      </div>
-    </ng-template>
+    <h3>Customers</h3>
+    <p class="empty">No customers added yet.</p>
   </div>
 </div>
-
-
