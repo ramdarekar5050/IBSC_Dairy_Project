@@ -80,6 +80,10 @@ export class DashboardComponent {
   }>>([]);
   editingMilkIndex = signal<number | null>(null);
 
+  // UI/validation state
+  submitAttempted = signal<boolean>(false);
+  toast = signal<{ type: 'success' | 'error' | null; message: string } | null>(null);
+
   modules: Module[] = [
     {
       id: 'milk-entry',
@@ -173,6 +177,39 @@ export class DashboardComponent {
     this.resetMilkForm();
   }
 
+  // Helpers for interactive UI in dashboard milk-entry view
+  getSessionEntries() {
+    const session = this.milkSession();
+    return this.milkEntries().filter(e => e.session === session);
+  }
+
+  getSessionTotals() {
+    const list = this.getSessionEntries();
+    const totalLiters = list.reduce((sum, e) => sum + (Number(e.liters) || 0), 0);
+    const totalAmount = list.reduce((sum, e) => sum + (Number(e.totalAmount) || 0), 0);
+    return { totalLiters, totalAmount };
+  }
+
+  amountPreview(): string {
+    const form = this.milkEntryForm();
+    const liters = Number(form.liters) || 0;
+    const rate = Number(form.rate) || 0;
+    return (liters * rate).toFixed(2);
+  }
+
+  isInvalid(field: keyof MilkForm): boolean {
+    if (!this.submitAttempted()) return false;
+    const v = this.milkEntryForm()[field];
+    return v === '' || v === undefined || v === null || (typeof v === 'number' && isNaN(v));
+  }
+
+  private showToast(type: 'success' | 'error', message: string) {
+    this.toast.set({ type, message });
+    setTimeout(() => {
+      if (this.toast()) this.toast.set(null);
+    }, 2200);
+  }
+
   resetMilkForm() {
     const today = new Date().toISOString().slice(0, 10);
     this.milkEntryForm.set({
@@ -199,21 +236,16 @@ export class DashboardComponent {
 
   saveMilkEntry() {
     const form = this.milkEntryForm();
-    if (!form.farmerId || !form.liters || !form.fat || !form.snf) {
-      alert('Please fill all fields');
-      return;
-    }
-    
-    // Ask for confirmation with Yes/No
-    const confirmed = confirm(`Save ${this.milkSession() === 'morning' ? 'Morning' : 'Evening'} entry?\n\nFarmer: ${form.farmerId}\nLiters: ${form.liters}\nFat: ${form.fat}%\nSNF: ${form.snf}%`);
-    if (!confirmed) {
+    this.submitAttempted.set(true);
+    if (!form.farmerId || !form.liters || !form.fat || !form.snf || form.rate === '') {
+      this.showToast('error', 'Please fill all required fields');
       return;
     }
     
     const litersNum = Number(form.liters);
     const fatNum = Number(form.fat);
     const snfNum = Number(form.snf);
-    const rateNum = form.rate === '' ? 0 : Number(form.rate);
+    const rateNum = Number((form.rate as number | '') || 0);
     const total = +(litersNum * rateNum).toFixed(2);
     const entry = {
       session: this.milkSession(),
@@ -237,6 +269,8 @@ export class DashboardComponent {
       this.milkEntries.update(list => [...list, { ...entry }]);
     }
     this.resetMilkForm();
+    this.submitAttempted.set(false);
+    this.showToast('success', 'Entry saved successfully');
   }
 
   removeMilkEntry(index: number) {

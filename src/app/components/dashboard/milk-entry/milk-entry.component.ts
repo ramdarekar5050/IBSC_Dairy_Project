@@ -47,6 +47,26 @@ export class MilkEntryComponent {
 
   editingMilkIndex = signal<number | null>(null);
 
+  // Computed helpers for a more informative UI
+  getSessionEntries() {
+    const session = this.milkSession();
+    return this.milkEntries().filter(e => e.session === session);
+  }
+
+  getSessionTotals() {
+    const entries = this.getSessionEntries();
+    const totalLiters = entries.reduce((sum, e) => sum + (Number(e.liters) || 0), 0);
+    const totalAmount = entries.reduce((sum, e) => sum + (Number(e.totalAmount) || 0), 0);
+    return { totalLiters, totalAmount };
+  }
+
+  amountPreview(): string {
+    const form = this.milkEntryForm();
+    const liters = Number(form.liters) || 0;
+    const rate = Number(form.rate) || 0;
+    return (liters * rate).toFixed(2);
+  }
+
   setMilkSession(session: 'morning' | 'evening') {
     if (session !== this.milkSession()) {
       this.milkSession.set(session);

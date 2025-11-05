@@ -1,0 +1,214 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="logo">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h1>Dairy</h1>
+      </div>
+      <h2>Create Account</h2>
+      <p>Join us and start your dairy journey</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="name-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <input 
+              type="text" 
+              id="firstName" 
+              [(ngModel)]="firstName" 
+              name="firstName"
+              placeholder="First name"
+              required
+              [disabled]="isLoading()"
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <input 
+              type="text" 
+              id="lastName" 
+              [(ngModel)]="lastName" 
+              name="lastName"
+              placeholder="Last name"
+              required
+              [disabled]="isLoading()"
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input 
+            type="email" 
+            id="email" 
+            [(ngModel)]="email" 
+            name="email"
+            placeholder="Enter your email"
+            required
+            [disabled]="isLoading()"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="16" r="1" fill="currentColor"/>
+            <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input 
+            [type]="showPassword() ? 'text' : 'password'" 
+            id="password" 
+            [(ngModel)]="password" 
+            name="password"
+            placeholder="Create a password"
+            required
+            [disabled]="isLoading()"
+          >
+          <button 
+            type="button" 
+            class="password-toggle"
+            (click)="togglePasswordVisibility()"
+            [disabled]="isLoading()"
+          >
+            <svg *ngIf="!showPassword()" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <svg *ngIf="showPassword()" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20C5 20 1 12 1 12A18.45 18.45 0 0 1 5.06 5.06L17.94 17.94Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4C19 4 23 12 23 12A18.5 18.5 0 0 1 19.07 19.07L9.9 4.24Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="password-strength">
+          <div class="strength-bar">
+            <div class="strength-fill" [class]="getPasswordStrength()"></div>
+          </div>
+          <span class="strength-text">{{ getPasswordStrengthText() }}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="16" r="1" fill="currentColor"/>
+            <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input 
+            [type]="showConfirmPassword() ? 'text' : 'password'" 
+            id="confirmPassword" 
+            [(ngModel)]="confirmPassword" 
+            name="confirmPassword"
+            placeholder="Confirm your password"
+            required
+            [disabled]="isLoading()"
+          >
+          <button 
+            type="button" 
+            class="password-toggle"
+            (click)="toggleConfirmPasswordVisibility()"
+            [disabled]="isLoading()"
+          >
+            <svg *ngIf="!showConfirmPassword()" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <svg *ngIf="showConfirmPassword()" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20C5 20 1 12 1 12A18.45 18.45 0 0 1 5.06 5.06L17.94 17.94Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4C19 4 23 12 23 12A18.5 18.5 0 0 1 19.07 19.07L9.9 4.24Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-wrapper">
+          <input type="checkbox" [(ngModel)]="agreeToTerms" name="agreeToTerms" [disabled]="isLoading()">
+          <span class="checkmark"></span>
+          I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
+        </label>
+      </div>
+
+      <div *ngIf="errorMessage()" class="error-message">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2"/>
+          <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        {{ errorMessage() }}
+      </div>
+
+      <button 
+        type="submit" 
+        class="auth-button"
+        [disabled]="isLoading()"
+        [class.loading]="isLoading()"
+      >
+        <span *ngIf="!isLoading()">Create Account</span>
+        <span *ngIf="isLoading()" class="loading-content">
+          <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 12A9 9 0 1 1 3 12A9 9 0 0 1 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.25"/>
+            <path d="M21 12A9 9 0 0 0 3 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Creating Account...
+        </span>
+      </button>
+
+      <div class="divider">
+        <span>or</span>
+      </div>
+
+      <div class="social-login">
+        <button type="button" class="social-button google">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.51H17.92C17.66 15.99 16.89 17.24 15.72 18.09V21.34H19.41C21.39 19.52 22.56 16.99 22.56 12.25Z" fill="#4285F4"/>
+            <path d="M12 23C15.24 23 17.95 21.87 19.41 19.34L15.72 18.09C14.73 18.69 13.48 19.01 12 19.01C8.87 19.01 6.22 16.96 5.27 14.13H1.46V17.38C2.99 20.39 6.27 23 12 23Z" fill="#34A853"/>
+            <path d="M5.27 14.13C5.02 13.4 4.89 12.62 4.89 11.81C4.89 11 5.02 10.22 5.27 9.49V6.24H1.46C0.64 7.92 0.14 9.8 0.14 11.81C0.14 13.82 0.64 15.7 1.46 17.38L5.27 14.13Z" fill="#FBBC05"/>
+            <path d="M12 4.99C13.48 4.99 14.73 5.31 15.72 5.91L19.41 2.66C17.95 0.13 15.24 -1 12 -1C6.27 -1 2.99 1.61 1.46 4.62L5.27 7.87C6.22 5.04 8.87 2.99 12 2.99Z" fill="#EA4335"/>
+          </svg>
+          Sign up with Google
+        </button>
+        <button type="button" class="social-button github">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+          </svg>
+          Sign up with GitHub
+        </button>
+      </div>
+
+      <div class="auth-footer">
+        <p>Already have an account? <a (click)="navigateToLogin()" class="auth-link">Sign in</a></p>
+      </div>
+    </form>
+  </div>
+</div>
