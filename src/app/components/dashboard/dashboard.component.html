@@ -74,25 +74,25 @@
             <div class="milk-form">
               <div class="field-row">
                 <div class="field">
-                  <label><span class="label-icon">📅</span> <span class="keyword">Date</span></label>
+                  <label><span class="keyword">Date</span></label>
                   <input type="date" [ngModel]="milkEntryForm().date" (ngModelChange)="updateMilkForm('date', $event)" aria-label="Date" />
                 </div>
                 <div class="field">
-                  <label><span class="label-icon">🧑‍🌾</span> <span class="keyword">Farmer ID</span></label>
+                  <label><span class="keyword">Farmer ID</span></label>
                   <div class="input-group" [ngClass]="{ invalid: isInvalid('farmerId') }">
                     <input type="text" placeholder="Enter farmer ID" [ngModel]="milkEntryForm().farmerId" (ngModelChange)="onFarmerIdChange($event)" (keydown.enter)="$event.preventDefault(); litersInput.focus()" aria-label="Farmer ID" />
                   </div>
                   <small class="error-text" *ngIf="isInvalid('farmerId')">Please enter Farmer ID</small>
                 </div>
                 <div class="field">
-                  <label><span class="label-icon">🏷️</span> <span class="keyword">Farmer Name</span></label>
+                  <label><span class="keyword">Farmer Name</span></label>
                   <input type="text" placeholder="will auto-fill later" [ngModel]="milkEntryForm().farmerName" readonly aria-label="Farmer Name" />
                 </div>
               </div>
 
               <div class="field-row">
                 <div class="field">
-                  <label><span class="label-icon">🫙</span> <span class="keyword">Liters</span></label>
+                  <label><span class="keyword">Liters</span></label>
                   <div class="input-group" [ngClass]="{ invalid: isInvalid('liters') }">
                     <input #litersInput type="number" min="0" step="0.01" placeholder="e.g. 12.5" [ngModel]="milkEntryForm().liters" (ngModelChange)="updateMilkForm('liters', $event)" (keydown.enter)="$event.preventDefault(); fatInput.focus()" aria-label="Liters" />
                     <span class="addon">L</span>
@@ -100,7 +100,7 @@
                   <small class="error-text" *ngIf="isInvalid('liters')">Please enter Liters</small>
                 </div>
                 <div class="field">
-                  <label><span class="label-icon">🧪</span> <span class="keyword">Fat (%)</span></label>
+                  <label><span class="keyword">Fat (%)</span></label>
                   <div class="input-group" [ngClass]="{ invalid: isInvalid('fat') }">
                     <input #fatInput type="number" min="0" step="0.1" placeholder="e.g. 3.5" [ngModel]="milkEntryForm().fat" (ngModelChange)="updateMilkForm('fat', $event)" (keydown.enter)="$event.preventDefault(); snfInput.focus()" aria-label="Fat percentage" />
                     <span class="addon">%</span>
@@ -108,7 +108,7 @@
                   <small class="error-text" *ngIf="isInvalid('fat')">Please enter Fat %</small>
                 </div>
                 <div class="field">
-                  <label><span class="label-icon">🧫</span> <span class="keyword">SNF (%)</span></label>
+                  <label><span class="keyword">SNF (%)</span></label>
                   <div class="input-group" [ngClass]="{ invalid: isInvalid('snf') }">
                     <input #snfInput type="number" min="0" step="0.1" placeholder="e.g. 8.5" [ngModel]="milkEntryForm().snf" (ngModelChange)="updateMilkForm('snf', $event)" (keydown.enter)="$event.preventDefault(); rateInput.focus()" aria-label="SNF percentage" />
                     <span class="addon">%</span>
@@ -116,7 +116,7 @@
                   <small class="error-text" *ngIf="isInvalid('snf')">Please enter SNF %</small>
                 </div>
                 <div class="field">
-                  <label><span class="label-icon">💵</span> <span class="keyword">Rate (per liter)</span></label>
+                  <label><span class="keyword">Rate (per liter)</span></label>
                   <div class="input-group" [ngClass]="{ invalid: isInvalid('rate') }">
                     <span class="addon prefix">₹</span>
                     <input #rateInput type="number" min="0" step="0.01" placeholder="e.g. 34.5" [ngModel]="milkEntryForm().rate" (ngModelChange)="updateMilkForm('rate', $event)" (keydown.enter)="$event.preventDefault(); saveMilkEntry()" aria-label="Rate per liter" />
