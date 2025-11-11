@@ -383,10 +383,12 @@
           } @else if (selectedModule() === 'feed-distribution') {
             <app-feed-distribution (backToDashboard)="selectedModule.set(null)"></app-feed-distribution>
           } @else if (selectedModule() === 'rate-chart') {
-            <div class="module-welcome">
-              <h3>Welcome to {{ getModuleName(selectedModule()!) }} Module</h3>
-              <p>This module is currently under development. More features will be available soon!</p>
-              <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
+            <div class="milk-entry">
+              <div class="milk-entry-header">
+                <h3>Rate Chart Management</h3>
+                <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
+              </div>
+              <app-rate-chart-management></app-rate-chart-management>
             </div>
           } @else {
             <div class="module-welcome">

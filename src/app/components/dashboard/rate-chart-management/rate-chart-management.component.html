@@ -1,0 +1,24 @@
+<div class="rate-chart-wrapper">
+	<div class="header">
+		<h3>Rate Chart Management</h3>
+		<button class="primary" (click)="onCreate()">Add New Rate</button>
+	</div>
+
+	<div class="content">
+		<app-rate-chart-list
+			[rates]="rateCharts()"
+			(edit)="onEdit($event)"
+			(delete)="onDelete($event)">
+		</app-rate-chart-list>
+
+		<div class="editor" *ngIf="showEditor()">
+			<app-rate-chart-edit
+				[row]="selectedRow()"
+				(saved)="onSaved($event)"
+				(cancelled)="onCancelEdit()">
+			</app-rate-chart-edit>
+		</div>
+	</div>
+</div>
+
+

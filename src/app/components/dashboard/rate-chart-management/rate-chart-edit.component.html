@@ -1,0 +1,30 @@
+<form (submit)="$event.preventDefault(); save()">
+	<div class="grid">
+		<label>
+			<div class="lbl">Effective From</div>
+			<input type="date" [(ngModel)]="form.effectiveFrom" name="effectiveFrom" />
+		</label>
+		<label>
+			<div class="lbl">FAT %</div>
+			<input type="number" min="0" step="0.1" [(ngModel)]="form.fat" name="fat" placeholder="e.g. 3.5" />
+		</label>
+		<label>
+			<div class="lbl">SNF %</div>
+			<input type="number" min="0" step="0.1" [(ngModel)]="form.snf" name="snf" placeholder="e.g. 8.5" />
+		</label>
+		<label>
+			<div class="lbl">Rate (₹/L)</div>
+			<input type="number" min="0" step="0.01" [(ngModel)]="form.ratePerLiter" name="ratePerLiter" placeholder="e.g. 34.5" />
+		</label>
+	</div>
+	<div class="actions">
+		<button type="submit" class="primary">Save</button>
+		<button type="button" class="secondary" (click)="cancelled.emit()">Cancel</button>
+	</div>
+	<div class="preview" *ngIf="form.fat && form.snf && form.ratePerLiter">
+		<span>Preview: FAT {{ form.fat }}%, SNF {{ form.snf }}%, Rate ₹ {{ form.ratePerLiter }}/L</span>
+	</div>
+	<!-- Note: Real calculation matrices can be added in future -->
+</form>
+
+

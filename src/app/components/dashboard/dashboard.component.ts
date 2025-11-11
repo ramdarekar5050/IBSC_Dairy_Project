@@ -7,6 +7,7 @@ import { DailyReportsComponent } from './daily-reports/daily-reports.component';
 import { MonthlyReportsComponent } from './monthly-reports/monthly-reports.component';
 import { FeedDistributionComponent } from './feed-distribution/feed-distribution.component';
 import { Router } from '@angular/router';
+import { RateChartManagementModule } from './rate-chart-management/rate-chart-management.module';
 
 interface Module {
   id: string;
@@ -28,7 +29,7 @@ interface MilkForm {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, AdvancedPaymentCashComponent, AdvancedPaymentSupplementsComponent, DailyReportsComponent, MonthlyReportsComponent, FeedDistributionComponent],
+  imports: [CommonModule, FormsModule, AdvancedPaymentCashComponent, AdvancedPaymentSupplementsComponent, DailyReportsComponent, MonthlyReportsComponent, FeedDistributionComponent, RateChartManagementModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

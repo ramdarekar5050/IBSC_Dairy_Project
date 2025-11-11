@@ -1,0 +1,49 @@
+.grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 12px;
+}
+
+label .lbl {
+	font-weight: 600;
+	margin-bottom: 6px;
+}
+
+input[type="number"],
+input[type="date"],
+input[type="text"] {
+	width: 100%;
+	padding: 8px 10px;
+	border: 1px solid #e5e7eb;
+	border-radius: 6px;
+}
+
+.actions {
+	display: flex;
+	gap: 10px;
+	margin-top: 12px;
+}
+
+.primary {
+	background: #2563eb;
+	color: #fff;
+	border: 0;
+	border-radius: 6px;
+	padding: 8px 12px;
+	cursor: pointer;
+}
+
+.secondary {
+	background: #f3f4f6;
+	border: 1px solid #e5e7eb;
+	border-radius: 6px;
+	padding: 8px 12px;
+	cursor: pointer;
+}
+
+.preview {
+	margin-top: 8px;
+	color: #4b5563;
+}
+
+

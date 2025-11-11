@@ -1,0 +1,30 @@
+<table>
+	<thead>
+		<tr>
+			<th>Effective From</th>
+			<th>FAT %</th>
+			<th>SNF %</th>
+			<th>Rate (₹/L)</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let r of rates">
+			<td>{{ r.effectiveFrom }}</td>
+			<td>{{ r.fat }}</td>
+			<td>{{ r.snf }}</td>
+			<td>{{ r.ratePerLiter }}</td>
+			<td>
+				<div class="row-actions">
+					<button class="secondary" (click)="edit.emit(r)">Edit</button>
+					<button class="secondary" (click)="delete.emit(r)">Delete</button>
+				</div>
+			</td>
+		</tr>
+		<tr *ngIf="!rates.length">
+			<td colspan="5">No rate entries yet.</td>
+		</tr>
+	</tbody>
+</table>
+
+
