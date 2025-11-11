@@ -1,4 +1,181 @@
 <div class="daily-reports-container">
-  <h3>Daily Reports</h3>
-  <p>Coming soon.</p>
+  <header class="reports-header">
+    <div>
+      <h3>Daily Milk Collection Report</h3>
+      <p class="subtitle">Review daily totals and drill down by farmer ID.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="clearFarmerFilter()" [disabled]="!filters().farmerId">
+        Clear Farmer Filter
+      </button>
+    </div>
+  </header>
+
+  <section class="filters-section">
+    <h4>Filters</h4>
+    <div class="filters-grid">
+      <div class="filter-field">
+        <label>Start Date</label>
+        <input type="date" [ngModel]="filters().startDate" (ngModelChange)="updateFilter('startDate', $event)" />
+      </div>
+      <div class="filter-field">
+        <label>End Date</label>
+        <input type="date" [ngModel]="filters().endDate" (ngModelChange)="updateFilter('endDate', $event)" />
+      </div>
+      <div class="filter-field">
+        <label>Farmer ID</label>
+        <input
+          type="text"
+          placeholder="All farmers"
+          [ngModel]="filters().farmerId"
+          (ngModelChange)="updateFilter('farmerId', $event.trim())"
+          list="daily-report-farmers" />
+        <datalist id="daily-report-farmers">
+          @for (customer of customersSignal(); track customer.farmerId) {
+            <option [value]="customer.farmerId">{{ customer.farmerName }}</option>
+          }
+        </datalist>
+      </div>
+    </div>
+  </section>
+
+  <section class="summary-section">
+    <div class="summary-card">
+      <span class="label">Date Range</span>
+      <strong>{{ formatDate(filters().startDate) }} - {{ formatDate(filters().endDate) }}</strong>
+    </div>
+    <div class="summary-card">
+      <span class="label">Entries</span>
+      <strong>{{ summaryStats().entryCount }}</strong>
+    </div>
+    <div class="summary-card">
+      <span class="label">Farmers</span>
+      <strong>{{ summaryStats().uniqueFarmers }}</strong>
+    </div>
+    <div class="summary-card">
+      <span class="label">Total Liters</span>
+      <strong>{{ summaryStats().totalLiters | number:'1.0-2' }} L</strong>
+    </div>
+    <div class="summary-card">
+      <span class="label">Total Amount</span>
+      <strong>{{ formatCurrency(summaryStats().totalAmount) }}</strong>
+    </div>
+  </section>
+
+  @if (filteredEntries().length) {
+    <section class="summary-table-section">
+      <div class="section-header">
+        <h4>Daily Totals</h4>
+        <span class="pill">{{ groupedByDate().length }} days</span>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Entries</th>
+              <th>Total Liters</th>
+              <th>Total Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of groupedByDate(); track row.date) {
+              <tr>
+                <td>{{ formatDate(row.date) }}</td>
+                <td>{{ row.entries.length }}</td>
+                <td>{{ row.liters | number:'1.0-2' }} L</td>
+                <td>{{ formatCurrency(row.amount) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    @if (!filters().farmerId) {
+      <section class="summary-table-section">
+        <div class="section-header">
+          <h4>Totals by Farmer</h4>
+          <span class="pill">{{ groupedByFarmer().length }} farmers</span>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Farmer</th>
+                <th>Entries</th>
+                <th>Total Liters</th>
+                <th>Total Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of groupedByFarmer(); track row.farmerId) {
+                <tr>
+                  <td>
+                    <div class="farmer-cell">
+                      <strong>{{ row.farmerName }}</strong>
+                      <small>{{ row.farmerId }}</small>
+                    </div>
+                  </td>
+                  <td>{{ row.entryCount }}</td>
+                  <td>{{ row.liters | number:'1.0-2' }} L</td>
+                  <td>{{ formatCurrency(row.amount) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <section class="details-section">
+      <div class="section-header">
+        <h4>Entry Details</h4>
+        <span class="pill">{{ filteredEntries().length }} records</span>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Session</th>
+              <th>Farmer</th>
+              <th>Liters</th>
+              <th>Fat %</th>
+              <th>SNF %</th>
+              <th>Rate</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of filteredEntries(); track $index) {
+              <tr>
+                <td>{{ formatDate(entry.date) }}</td>
+                <td>
+                  <span class="session-badge" [class.morning]="entry.session === 'morning'" [class.evening]="entry.session === 'evening'">
+                    {{ entry.session === 'morning' ? 'Morning' : 'Evening' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="farmer-cell">
+                    <strong>{{ resolveFarmerName(entry.farmerId) }}</strong>
+                    <small>{{ entry.farmerId }}</small>
+                  </div>
+                </td>
+                <td>{{ entry.liters | number:'1.0-2' }}</td>
+                <td>{{ entry.fat | number:'1.0-1' }}%</td>
+                <td>{{ entry.snf | number:'1.0-1' }}%</td>
+                <td>{{ formatCurrency(entry.rate) }}</td>
+                <td><strong>{{ formatCurrency(entry.totalAmount) }}</strong></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  } @else {
+    <div class="empty-state">
+      <span>No milk entries found for the selected filters.</span>
+    </div>
+  }
 </div>

@@ -326,15 +326,36 @@
             } @else {
 
               @if (selectedReportsSubModule() === 'daily') {
-                <app-daily-reports></app-daily-reports>
+                <app-daily-reports
+                  [milkEntries]="milkEntries()"
+                  [customers]="customers()">
+                </app-daily-reports>
               } @else {
-                <app-monthly-reports></app-monthly-reports>
+                <app-monthly-reports
+                  [milkEntries]="milkEntries()"
+                  [customers]="customers()">
+                </app-monthly-reports>
               }
 
               <div class="actions">
                 <button class="back-btn" (click)="selectedReportsSubModule.set(null)">Back to Report Selection</button>
               </div>
             }
+          </div>
+        } @else if (selectedModule() === 'billing') {
+          <div class="milk-entry">
+            <div class="milk-entry-header">
+              <h3>Billing & Invoicing</h3>
+              <button class="back-btn" (click)="selectedModule.set(null)">Back to Dashboard</button>
+            </div>
+            <app-billing
+              [milkEntries]="milkEntries()"
+              [customers]="customers()"
+              [invoices]="billingInvoices()"
+              (invoiceCreated)="handleInvoiceCreated($event)"
+              (invoiceStatusChanged)="handleInvoiceStatusChange($event)"
+              (invoiceDeleted)="handleInvoiceDeleted($event)">
+            </app-billing>
           </div>
         } @else {
           @if (selectedModule() === 'advanced-payment') {
@@ -346,37 +367,67 @@
 
               @if (!selectedAdvancedSubModule()) {
                 <div class="modules-section">
-                  <h3>Select Submodule</h3>
+                  <h3>Select Advance Payment Type</h3>
                   <div class="modules-grid advanced-payment-grid">
                     <div class="module-card" (click)="selectedAdvancedSubModule.set('entry')">
-                      <div class="module-icon">📝</div>
+                      <div class="module-icon">💵</div>
                       <div class="module-content">
-                        <h4>Advance Entry</h4>
-                        <p>Record new advance payments</p>
+                        <h4>Cash Advance</h4>
+                        <p>Record cash advance payments</p>
                       </div>
                     </div>
                     <div class="module-card" (click)="selectedAdvancedSubModule.set('received')">
-                      <div class="module-icon">💰</div>
+                      <div class="module-icon">💊</div>
                       <div class="module-content">
-                        <h4>Advance Received</h4>
-                        <p>View advance payments received</p>
+                        <h4>Supplements</h4>
+                        <p>Record supplement/feed advances</p>
                       </div>
                     </div>
                   </div>
                 </div>
               } @else {
                 <div class="tabs">
-                  <button class="tab" [class.active]="selectedAdvancedSubModule() === 'entry'" (click)="selectedAdvancedSubModule.set('entry')">Advance Entry</button>
-                  <button class="tab" [class.active]="selectedAdvancedSubModule() === 'received'" (click)="selectedAdvancedSubModule.set('received')">Advance Received</button>
+                  <button class="tab" [class.active]="selectedAdvancedSubModule() === 'entry'" (click)="selectedAdvancedSubModule.set('entry')">💵 Cash Advance</button>
+                  <button class="tab" [class.active]="selectedAdvancedSubModule() === 'received'" (click)="selectedAdvancedSubModule.set('received')">💊 Supplements</button>
                 </div>
 
-                <div class="milk-form">
-                  <h4>{{ selectedAdvancedSubModule() === 'entry' ? 'Advance Entry' : 'Advance Received' }}</h4>
-                  <p class="coming-soon">This feature is coming soon.</p>
+                <!-- Filter by Farmer ID -->
+                <div class="filter-section" style="margin: 20px 0; padding: 16px; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #4a5568;">Filter by Farmer ID (leave empty for all farmers):</label>
+                  <input
+                    type="text"
+                    list="advance-farmer-list"
+                    placeholder="Enter Farmer ID or select from list"
+                    [ngModel]="selectedAdvanceFarmerId()"
+                    (ngModelChange)="selectedAdvanceFarmerId.set($event)"
+                    style="width: 100%; max-width: 400px; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 14px;" />
+                  <datalist id="advance-farmer-list">
+                    @for (customer of customers(); track customer.farmerId) {
+                      <option [value]="customer.farmerId">{{ customer.farmerName }} ({{ customer.farmerId }})</option>
+                    }
+                  </datalist>
                 </div>
 
-                <div class="actions">
-                  <button class="back-btn" (click)="selectedAdvancedSubModule.set(null)">Back to Submodule Select</button>
+                @if (selectedAdvancedSubModule() === 'entry') {
+                  <app-advanced-payment-cash
+                    [customers]="customers()"
+                    [entries]="filteredCashAdvanceEntries()"
+                    [selectedFarmerId]="selectedAdvanceFarmerId()"
+                    (entryAdded)="handleCashAdvanceAdded($event)"
+                    (entryDeleted)="handleCashAdvanceDeleted($event)">
+                  </app-advanced-payment-cash>
+                } @else {
+                  <app-advanced-payment-supplements
+                    [customers]="customers()"
+                    [entries]="filteredSupplementEntries()"
+                    [selectedFarmerId]="selectedAdvanceFarmerId()"
+                    (entryAdded)="handleSupplementAdded($event)"
+                    (entryDeleted)="handleSupplementDeleted($event)">
+                  </app-advanced-payment-supplements>
+                }
+
+                <div class="actions" style="margin-top: 20px;">
+                  <button class="back-btn" (click)="selectedAdvancedSubModule.set(null)">Back to Advance Payment Types</button>
                 </div>
               }
             </div>

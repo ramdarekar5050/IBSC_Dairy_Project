@@ -1,6 +1,343 @@
 <div class="billing-container">
-  <h3>Billing</h3>
-  <p>Coming soon.</p>
+  <!-- Header -->
+  <div class="billing-header">
+    <h3>Billing & Invoicing</h3>
+    <div class="header-actions">
+      @if (activeView() !== 'list') {
+        <button class="btn-secondary" (click)="showListView()">← Back to List</button>
+      }
+      @if (activeView() === 'list') {
+        <button class="btn-primary" (click)="showCreateView()">+ Create Invoice</button>
+      }
+    </div>
+  </div>
+
+  <!-- Toast Messages -->
+  <div class="toast" *ngIf="false" [class.success]="true">
+    <span class="toast-icon">✅</span>
+    <span class="toast-message">Invoice created successfully</span>
+  </div>
+
+  <!-- List View -->
+  @if (activeView() === 'list') {
+    <div class="billing-list-view">
+      <!-- Filters -->
+      <div class="filters-section">
+        <h4>Filters</h4>
+        <div class="filters-grid">
+          <div class="filter-field">
+            <label>Farmer ID</label>
+            <input
+              type="text"
+              placeholder="All farmers"
+              [ngModel]="filters().farmerId"
+              (ngModelChange)="updateFilter('farmerId', $event.trim())"
+              list="billing-filter-farmers" />
+            <datalist id="billing-filter-farmers">
+              @for (customer of customers; track customer.farmerId) {
+                <option [value]="customer.farmerId">{{ customer.farmerName }}</option>
+              }
+            </datalist>
+          </div>
+          <div class="filter-field">
+            <label>Period Start</label>
+            <input type="date" [ngModel]="filters().periodStart" (ngModelChange)="updateFilter('periodStart', $event)" />
+          </div>
+          <div class="filter-field">
+            <label>Period End</label>
+            <input type="date" [ngModel]="filters().periodEnd" (ngModelChange)="updateFilter('periodEnd', $event)" />
+          </div>
+          <div class="filter-field">
+            <label>Status</label>
+            <select [ngModel]="filters().status" (ngModelChange)="updateFilter('status', $event)">
+              <option value="all">All Status</option>
+              <option value="draft">Draft</option>
+              <option value="issued">Issued</option>
+              <option value="paid">Paid</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invoices Table -->
+      <div class="invoices-table-section">
+        <div class="table-header">
+          <h4>Invoices ({{ filteredInvoices().length }})</h4>
+        </div>
+        @if (filteredInvoices().length > 0) {
+          <div class="table-wrapper">
+            <table class="invoices-table">
+              <thead>
+                <tr>
+                  <th>Invoice #</th>
+                  <th>Farmer</th>
+                  <th>Period</th>
+                  <th>Total Liters</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (invoice of filteredInvoices(); track invoice.id) {
+                  <tr>
+                    <td><strong>{{ invoice.id }}</strong></td>
+                    <td>
+                      <div class="farmer-info">
+                        <strong>{{ invoice.farmerName }}</strong>
+                        <small>{{ invoice.farmerId }}</small>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="period-info">
+                        <div>{{ formatDate(invoice.periodStart) }}</div>
+                        <div class="period-separator">to</div>
+                        <div>{{ formatDate(invoice.periodEnd) }}</div>
+                      </div>
+                    </td>
+                    <td>{{ invoice.totalLiters.toFixed(2) }} L</td>
+                    <td><strong>{{ formatCurrency(invoice.grossAmount) }}</strong></td>
+                    <td>
+                      <span [class]="getStatusClass(invoice.status)">{{ invoice.status.toUpperCase() }}</span>
+                    </td>
+                    <td>{{ formatDate(invoice.createdAt) }}</td>
+                    <td>
+                      <div class="row-actions">
+                        <button class="btn-icon" (click)="showDetailView(invoice.id)" title="View Details">👁️</button>
+                        <button class="btn-icon" (click)="printInvoice(invoice)" title="Print">🖨️</button>
+                        @if (invoice.status === 'draft') {
+                          <select class="status-select" [value]="invoice.status" (change)="updateInvoiceStatus(invoice.id, $any($event.target).value)">
+                            <option value="draft">Draft</option>
+                            <option value="issued">Issue</option>
+                            <option value="paid">Mark Paid</option>
+                          </select>
+                        } @else if (invoice.status === 'issued') {
+                          <select class="status-select" [value]="invoice.status" (change)="updateInvoiceStatus(invoice.id, $any($event.target).value)">
+                            <option value="issued">Issued</option>
+                            <option value="paid">Mark Paid</option>
+                          </select>
+                        }
+                        <button class="btn-icon delete" (click)="deleteInvoice(invoice.id)" title="Delete">🗑️</button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="empty-state">
+            <p>No invoices found matching the filters.</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Create Invoice View -->
+  @if (activeView() === 'create') {
+    <div class="billing-create-view">
+      <div class="create-form-section">
+        <h4>Create New Invoice</h4>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Farmer ID <span class="required">*</span></label>
+            <input
+              type="text"
+              placeholder="Enter or select farmer ID"
+              [ngModel]="createForm().farmerId"
+              (ngModelChange)="updateCreateForm('farmerId', $event.trim())"
+              list="billing-create-farmers"
+              required />
+            <datalist id="billing-create-farmers">
+              @for (customer of customers; track customer.farmerId) {
+                <option [value]="customer.farmerId">{{ customer.farmerName }}</option>
+              }
+            </datalist>
+          </div>
+          <div class="form-field">
+            <label>Period Start <span class="required">*</span></label>
+            <input type="date" [ngModel]="createForm().periodStart" (ngModelChange)="updateCreateForm('periodStart', $event)" required />
+          </div>
+          <div class="form-field">
+            <label>Period End <span class="required">*</span></label>
+            <input type="date" [ngModel]="createForm().periodEnd" (ngModelChange)="updateCreateForm('periodEnd', $event)" required />
+          </div>
+          <div class="form-field">
+            <label>Initial Status</label>
+            <select [ngModel]="createForm().status" (ngModelChange)="updateCreateForm('status', $event)">
+              <option value="draft">Draft</option>
+              <option value="issued">Issued</option>
+              <option value="paid">Paid</option>
+            </select>
+          </div>
+        </div>
+
+        @if (createForm().farmerId && createForm().periodStart && createForm().periodEnd) {
+          <div class="preview-section">
+            <div class="preview-header">
+              <h4>Preview</h4>
+              <div class="preview-stats">
+                <span><strong>{{ previewTotals().entryCount }}</strong> entries</span>
+                <span><strong>{{ previewTotals().totalLiters.toFixed(2) }}</strong> liters</span>
+                <span><strong>{{ formatCurrency(previewTotals().grossAmount) }}</strong> total</span>
+              </div>
 </div>
 
+            @if (availableMilkEntries().length > 0) {
+              <div class="preview-table-wrapper">
+                <table class="preview-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Session</th>
+                      <th>Liters</th>
+                      <th>Fat %</th>
+                      <th>SNF %</th>
+                      <th>Rate</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (entry of availableMilkEntries(); track $index) {
+                      <tr>
+                        <td>{{ formatDate(entry.date) }}</td>
+                        <td>
+                          <span class="session-badge" [class.morning]="entry.session === 'morning'" [class.evening]="entry.session === 'evening'">
+                            {{ entry.session === 'morning' ? 'Morning' : 'Evening' }}
+                          </span>
+                        </td>
+                        <td>{{ entry.liters.toFixed(2) }}</td>
+                        <td>{{ entry.fat.toFixed(1) }}%</td>
+                        <td>{{ entry.snf.toFixed(1) }}%</td>
+                        <td>{{ formatCurrency(entry.rate) }}</td>
+                        <td><strong>{{ formatCurrency(entry.totalAmount) }}</strong></td>
+                      </tr>
+                    }
+                  </tbody>
+                  <tfoot>
+                    <tr class="total-row">
+                      <td colspan="2"><strong>Total</strong></td>
+                      <td><strong>{{ previewTotals().totalLiters.toFixed(2) }} L</strong></td>
+                      <td colspan="3"></td>
+                      <td><strong>{{ formatCurrency(previewTotals().grossAmount) }}</strong></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            } @else {
+              <div class="empty-preview">
+                <p>No milk entries found for the selected farmer and date range.</p>
+              </div>
+            }
+          </div>
+        }
 
+        <div class="form-actions">
+          <button class="btn-primary" (click)="createInvoice()" [disabled]="availableMilkEntries().length === 0">
+            Create Invoice
+          </button>
+          <button class="btn-secondary" (click)="showListView()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Invoice Detail View -->
+  @if (activeView() === 'detail' && selectedInvoice()) {
+    <div class="billing-detail-view">
+      @if (selectedInvoice(); as invoice) {
+        <div class="invoice-detail-card">
+          <div class="detail-header">
+            <div>
+              <h4>Invoice #{{ invoice.id }}</h4>
+              <p class="invoice-meta">
+                Created: {{ formatDate(invoice.createdAt) }} | 
+                Status: <span [class]="getStatusClass(invoice.status)">{{ invoice.status.toUpperCase() }}</span>
+              </p>
+            </div>
+            <div class="detail-actions">
+              <button class="btn-primary" (click)="printInvoice(invoice)">🖨️ Print</button>
+              @if (invoice.status === 'draft') {
+                <select class="status-select" [value]="invoice.status" (change)="updateInvoiceStatus(invoice.id, $any($event.target).value)">
+                  <option value="draft">Draft</option>
+                  <option value="issued">Issue</option>
+                  <option value="paid">Mark Paid</option>
+                </select>
+              } @else if (invoice.status === 'issued') {
+                <select class="status-select" [value]="invoice.status" (change)="updateInvoiceStatus(invoice.id, $any($event.target).value)">
+                  <option value="issued">Issued</option>
+                  <option value="paid">Mark Paid</option>
+                </select>
+              }
+              <button class="btn-danger" (click)="deleteInvoice(invoice.id)">🗑️ Delete</button>
+            </div>
+          </div>
+
+          <div class="detail-info-grid">
+            <div class="info-card">
+              <h5>Farmer Information</h5>
+              <p><strong>{{ invoice.farmerName }}</strong></p>
+              <p>ID: {{ invoice.farmerId }}</p>
+              @if (getCustomer(invoice.farmerId)) {
+                <p>Address: {{ getCustomer(invoice.farmerId)?.address || '-' }}</p>
+                <p>Mobile: {{ getCustomer(invoice.farmerId)?.mobileNumber || '-' }}</p>
+              }
+            </div>
+            <div class="info-card">
+              <h5>Invoice Period</h5>
+              <p><strong>{{ formatDate(invoice.periodStart) }}</strong> to <strong>{{ formatDate(invoice.periodEnd) }}</strong></p>
+            </div>
+            <div class="info-card">
+              <h5>Summary</h5>
+              <p>Total Liters: <strong>{{ invoice.totalLiters.toFixed(2) }} L</strong></p>
+              <p>Gross Amount: <strong>{{ formatCurrency(invoice.grossAmount) }}</strong></p>
+              <p>Line Items: <strong>{{ invoice.lineItems.length }}</strong></p>
+            </div>
+          </div>
+
+          <div class="line-items-section">
+            <h5>Line Items</h5>
+            <div class="table-wrapper">
+              <table class="line-items-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Session</th>
+                    <th>Liters</th>
+                    <th>Rate (₹/L)</th>
+                    <th>Amount (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of invoice.lineItems; track $index) {
+                    <tr>
+                      <td>{{ formatDate(item.date) }}</td>
+                      <td>
+                        <span class="session-badge" [class.morning]="item.session === 'morning'" [class.evening]="item.session === 'evening'">
+                          {{ item.session === 'morning' ? 'Morning' : 'Evening' }}
+                        </span>
+                      </td>
+                      <td>{{ item.liters.toFixed(2) }}</td>
+                      <td>{{ item.rate.toFixed(2) }}</td>
+                      <td><strong>{{ formatCurrency(item.amount) }}</strong></td>
+                    </tr>
+                  }
+                </tbody>
+                <tfoot>
+                  <tr class="total-row">
+                    <td colspan="2"><strong>Total</strong></td>
+                    <td><strong>{{ invoice.totalLiters.toFixed(2) }} L</strong></td>
+                    <td></td>
+                    <td><strong>{{ formatCurrency(invoice.grossAmount) }}</strong></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

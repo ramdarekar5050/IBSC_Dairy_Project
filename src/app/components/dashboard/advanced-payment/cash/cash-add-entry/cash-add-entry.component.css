@@ -1,8 +1,0 @@
-.milk-form { display: flex; flex-direction: column; gap: 14px; }
-.field-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.field label { display: block; font-size: 12px; font-weight: 600; color: #718096; margin-bottom: 6px; }
-.field input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #e2e8f0; background: white; outline: none; }
-.actions { display: flex; gap: 10px; }
-.save-btn { padding: 10px 16px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 8px; cursor: pointer; }
-.reset-btn { padding: 10px 16px; background: #e2e8f0; color: #1a202c; border: none; border-radius: 8px; cursor: pointer; }
-

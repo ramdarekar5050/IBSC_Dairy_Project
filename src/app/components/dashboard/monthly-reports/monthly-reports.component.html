@@ -1,4 +1,199 @@
 <div class="monthly-reports-container">
+  <header class="reports-header">
+    <div>
+      <h3>Monthly Milk Collection Report</h3>
+      <p class="subtitle">Analyze month-wise performance for all farmers or filter down to a specific farmer ID.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="clearFarmerFilter()" [disabled]="!farmerId()">
+        Clear Farmer Filter
+      </button>
+    </div>
+  </header>
+
+  @if (periods().length) {
+    <section class="filters-section">
+      <h4>Filters</h4>
+      <div class="filters-grid">
+        <div class="filter-field">
+          <label>Select Month</label>
+          <select [ngModel]="selectedPeriod()" (ngModelChange)="updatePeriod($event)">
+            @for (period of periods(); track period.key) {
+              <option [value]="period.key">{{ period.label }}</option>
+            }
+          </select>
+        </div>
+        <div class="filter-field">
+          <label>Farmer ID</label>
+          <input
+            type="text"
+            placeholder="All farmers"
+            [ngModel]="farmerId()"
+            (ngModelChange)="updateFarmer($event)"
+            list="monthly-farmers" />
+          <datalist id="monthly-farmers">
+            @for (customer of customersSignal(); track customer.farmerId) {
+              <option [value]="customer.farmerId">{{ customer.farmerName }}</option>
+            }
+          </datalist>
+        </div>
+      </div>
+    </section>
+
+    <section class="summary-section">
+      <div class="summary-card">
+        <span class="label">Period</span>
+        <strong>{{ selectedPeriodInfo()?.label || '—' }}</strong>
+      </div>
+      <div class="summary-card">
+        <span class="label">Entries</span>
+        <strong>{{ monthlySummary().entryCount }}</strong>
+      </div>
+      <div class="summary-card">
+        <span class="label">Active Days</span>
+        <strong>{{ monthlySummary().uniqueDays }}</strong>
+      </div>
+      <div class="summary-card">
+        <span class="label">Farmers</span>
+        <strong>{{ monthlySummary().uniqueFarmers }}</strong>
+      </div>
+      <div class="summary-card">
+        <span class="label">Total Liters</span>
+        <strong>{{ monthlySummary().totalLiters | number:'1.0-2' }} L</strong>
+      </div>
+      <div class="summary-card">
+        <span class="label">Total Amount</span>
+        <strong>{{ formatCurrency(monthlySummary().totalAmount) }}</strong>
+      </div>
+      <div class="summary-card">
+        <span class="label">Average / Day</span>
+        <strong>{{ monthlySummary().averagePerDay | number:'1.0-2' }} L</strong>
+      </div>
+    </section>
+
+    @if (filteredEntries().length) {
+      @if (!farmerId()) {
+        <section class="summary-table-section">
+          <div class="section-header">
+            <h4>Totals by Farmer</h4>
+            <span class="pill">{{ breakdownByFarmer().length }} farmers</span>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Farmer</th>
+                  <th>Entries</th>
+                  <th>Total Liters</th>
+                  <th>Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of breakdownByFarmer(); track row.farmerId) {
+                  <tr>
+                    <td>
+                      <div class="farmer-cell">
+                        <strong>{{ row.farmerName }}</strong>
+                        <small>{{ row.farmerId }}</small>
+                      </div>
+                    </td>
+                    <td>{{ row.entryCount }}</td>
+                    <td>{{ row.liters | number:'1.0-2' }} L</td>
+                    <td>{{ formatCurrency(row.amount) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      }
+
+      <section class="summary-table-section">
+        <div class="section-header">
+          <h4>Daily Breakdown</h4>
+          <span class="pill">{{ breakdownByDay().length }} days</span>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Entries</th>
+                <th>Total Liters</th>
+                <th>Total Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of breakdownByDay(); track row.date) {
+                <tr>
+                  <td>{{ formatDate(row.date) }}</td>
+                  <td>{{ row.entries.length }}</td>
+                  <td>{{ row.liters | number:'1.0-2' }} L</td>
+                  <td>{{ formatCurrency(row.amount) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="details-section">
+        <div class="section-header">
+          <h4>Entry Details</h4>
+          <span class="pill">{{ filteredEntries().length }} records</span>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Session</th>
+                <th>Farmer</th>
+                <th>Liters</th>
+                <th>Fat %</th>
+                <th>SNF %</th>
+                <th>Rate</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (entry of filteredEntries(); track $index) {
+                <tr>
+                  <td>{{ formatDate(entry.date) }}</td>
+                  <td>
+                    <span class="session-badge" [class.morning]="entry.session === 'morning'" [class.evening]="entry.session === 'evening'">
+                      {{ entry.session === 'morning' ? 'Morning' : 'Evening' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="farmer-cell">
+                      <strong>{{ resolveFarmerName(entry.farmerId) }}</strong>
+                      <small>{{ entry.farmerId }}</small>
+                    </div>
+                  </td>
+                  <td>{{ entry.liters | number:'1.0-2' }}</td>
+                  <td>{{ entry.fat | number:'1.0-1' }}%</td>
+                  <td>{{ entry.snf | number:'1.0-1' }}%</td>
+                  <td>{{ formatCurrency(entry.rate) }}</td>
+                  <td><strong>{{ formatCurrency(entry.totalAmount) }}</strong></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    } @else {
+      <div class="empty-state">
+        <span>No entries found for the selected filters.</span>
+      </div>
+    }
+  } @else {
+    <div class="empty-state">
+      <span>No milk collection data available yet.</span>
+    </div>
+  }
+</div>
+<div class="monthly-reports-container">
   <h3>Monthly Reports</h3>
   <p>Coming soon.</p>
 </div>

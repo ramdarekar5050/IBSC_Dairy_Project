@@ -1,6 +1,94 @@
 <div class="advanced-payment-container">
-  <h3>Advanced Payment</h3>
-  <p>Coming soon.</p>
+  <!-- Header -->
+  <div class="payment-header">
+    <h3>Advanced Payment Management</h3>
+    <div class="header-actions">
+      <div class="farmer-filter">
+        <label>Filter by Farmer:</label>
+        <input
+          type="text"
+          list="farmer-list"
+          placeholder="Enter Farmer ID or select from list"
+          [value]="selectedFarmerId()"
+          (input)="updateFarmerFilter($any($event.target).value)"
+          class="farmer-input" />
+        <datalist id="farmer-list">
+          <option value="">All Farmers</option>
+          @for (customer of customers; track customer.farmerId) {
+            <option [value]="customer.farmerId">{{ customer.farmerName }} ({{ customer.farmerId }})</option>
+          }
+          @for (farmerId of getUniqueFarmerIds('cash'); track farmerId) {
+            @if (!isCustomerInList(farmerId)) {
+              <option [value]="farmerId">{{ farmerId }}</option>
+            }
+          }
+        </datalist>
+        @if (selectedFarmerId()) {
+          <button class="btn-clear-filter" (click)="updateFarmerFilter('')" title="Clear filter">✕</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="payment-tabs">
+    <button
+      class="tab"
+      [class.active]="activeSubModule() === 'cash'"
+      (click)="switchSubModule('cash')">
+      💵 Cash Advance
+      @if (filteredCashEntries().length > 0) {
+        <span class="badge">{{ filteredCashEntries().length }}</span>
+      }
+    </button>
+    <button
+      class="tab"
+      [class.active]="activeSubModule() === 'supplements'"
+      (click)="switchSubModule('supplements')">
+      💊 Supplements
+      @if (filteredSupplementEntries().length > 0) {
+        <span class="badge">{{ filteredSupplementEntries().length }}</span>
+      }
+    </button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <div class="summary-card">
+      <div class="summary-label">Cash Advance Total</div>
+      <div class="summary-value">₹ {{ cashTotal().toFixed(2) }}</div>
+      <div class="summary-count">{{ filteredCashEntries().length }} entries</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Supplements Total</div>
+      <div class="summary-value">₹ {{ supplementTotal().toFixed(2) }}</div>
+      <div class="summary-count">{{ filteredSupplementEntries().length }} entries</div>
+    </div>
+    <div class="summary-card total">
+      <div class="summary-label">Grand Total</div>
+      <div class="summary-value">₹ {{ (cashTotal() + supplementTotal()).toFixed(2) }}</div>
+      <div class="summary-count">All Advance Payments</div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="payment-content">
+    @if (activeSubModule() === 'cash') {
+      <app-advanced-payment-cash
+        [customers]="customers"
+        [entries]="filteredCashEntries()"
+        [selectedFarmerId]="selectedFarmerId()"
+        (entryAdded)="handleCashEntryAdded($event)"
+        (entryDeleted)="handleCashEntryDeleted($event)">
+      </app-advanced-payment-cash>
+    } @else {
+      <app-advanced-payment-supplements
+        [customers]="customers"
+        [entries]="filteredSupplementEntries()"
+        [selectedFarmerId]="selectedFarmerId()"
+        (entryAdded)="handleSupplementEntryAdded($event)"
+        (entryDeleted)="handleSupplementEntryDeleted($event)">
+      </app-advanced-payment-supplements>
+    }
+  </div>
 </div>
-
-

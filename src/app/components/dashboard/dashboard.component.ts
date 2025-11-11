@@ -1,13 +1,21 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdvancedPaymentCashComponent } from './advanced-payment/cash/cash.component';
-import { AdvancedPaymentSupplementsComponent } from './advanced-payment/supplements/supplements.component';
+import { AdvancedPaymentCashComponent, AdvanceEntry } from './advanced-payment/cash/cash.component';
+import { AdvancedPaymentSupplementsComponent, SupplementEntry } from './advanced-payment/supplements/supplements.component';
 import { DailyReportsComponent } from './daily-reports/daily-reports.component';
 import { MonthlyReportsComponent } from './monthly-reports/monthly-reports.component';
 import { FeedDistributionComponent } from './feed-distribution/feed-distribution.component';
 import { Router } from '@angular/router';
 import { RateChartManagementModule } from './rate-chart-management/rate-chart-management.module';
+import { BillingComponent } from './billing/billing.component';
+import {
+  BillingInvoice,
+  CustomerProfile,
+  InvoiceStatus,
+  MilkEntry,
+  MilkSession
+} from '../../models/dairy.models';
 
 interface Module {
   id: string;
@@ -29,7 +37,17 @@ interface MilkForm {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, AdvancedPaymentCashComponent, AdvancedPaymentSupplementsComponent, DailyReportsComponent, MonthlyReportsComponent, FeedDistributionComponent, RateChartManagementModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    AdvancedPaymentCashComponent,
+    AdvancedPaymentSupplementsComponent,
+    DailyReportsComponent,
+    MonthlyReportsComponent,
+    FeedDistributionComponent,
+    RateChartManagementModule,
+    BillingComponent
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -37,49 +55,53 @@ interface MilkForm {
 export class DashboardComponent {
   user = signal<any>(null);
   selectedModule = signal<string | null>(null);
-  milkSession = signal<'morning' | 'evening'>('morning');
-  selectedMilkSubModule = signal<'morning' | 'evening' | null>(null);
+  milkSession = signal<MilkSession>('morning');
+  selectedMilkSubModule = signal<MilkSession | null>(null);
   selectedAdvancedSubModule = signal<'entry' | 'received' | null>(null);
   selectedReportsSubModule = signal<'daily' | 'monthly' | null>(null);
 
   // Customers state
-  customers = signal<Array<{ farmerId: string; farmerName: string; address: string; mobileNumber: string }>>([]);
-  newCustomer = signal<{ farmerId: string; farmerName: string; address: string; mobileNumber: string }>({ 
+  customers = signal<CustomerProfile[]>([]);
+  newCustomer = signal<CustomerProfile>({ 
     farmerId: '', 
     farmerName: '', 
     address: '', 
     mobileNumber: '' 
   });
   editingCustomerIndex = signal<number | null>(null);
-  editingCustomer = signal<{ farmerId: string; farmerName: string; address: string; mobileNumber: string }>({ 
+  editingCustomer = signal<CustomerProfile>({ 
     farmerId: '', 
     farmerName: '', 
     address: '', 
     mobileNumber: '' 
   });
 
-  milkEntryForm = signal<MilkForm>({
-    date: new Date().toISOString().slice(0, 10),
-    farmerId: '',
-    liters: '',
-    fat: '',
-    snf: '',
-    farmerName: '',
-    rate: ''
+  milkEntryForm = signal<MilkForm>(this.createDefaultMilkForm());
+
+  milkEntries = signal<MilkEntry[]>([]);
+  editingMilkIndex = signal<number | null>(null);
+
+  billingInvoices = signal<BillingInvoice[]>(this.loadInvoicesFromStorage());
+
+  // Advance Payment state
+  cashAdvanceEntries = signal<AdvanceEntry[]>(this.loadCashEntriesFromStorage());
+  supplementEntries = signal<SupplementEntry[]>(this.loadSupplementEntriesFromStorage());
+  selectedAdvanceFarmerId = signal<string>('');
+
+  // Computed filtered entries for advance payment
+  filteredCashAdvanceEntries = computed(() => {
+    const farmerId = this.selectedAdvanceFarmerId();
+    const entries = this.cashAdvanceEntries();
+    if (!farmerId) return entries;
+    return entries.filter(e => e.farmerId === farmerId);
   });
 
-  milkEntries = signal<Array<{
-    session: 'morning' | 'evening';
-    date: string;
-    farmerId: string;
-    farmerName: string;
-    liters: number;
-    fat: number;
-    snf: number;
-    rate: number;
-    totalAmount: number;
-  }>>([]);
-  editingMilkIndex = signal<number | null>(null);
+  filteredSupplementEntries = computed(() => {
+    const farmerId = this.selectedAdvanceFarmerId();
+    const entries = this.supplementEntries();
+    if (!farmerId) return entries;
+    return entries.filter(e => e.farmerId === farmerId);
+  });
 
   // UI/validation state
   submitAttempted = signal<boolean>(false);
@@ -136,11 +158,33 @@ export class DashboardComponent {
     }
   ];
 
+  private readonly billingStorageKey = 'dairyBillingInvoices';
+  private readonly cashAdvanceStorageKey = 'dairyCashAdvanceEntries';
+  private readonly supplementStorageKey = 'dairySupplementEntries';
+
   constructor(private router: Router) {
     const userData = localStorage.getItem('user');
     if (userData) {
       this.user.set(JSON.parse(userData));
     }
+
+    effect(() => {
+      if (typeof window === 'undefined') return;
+      const data = this.billingInvoices();
+      localStorage.setItem(this.billingStorageKey, JSON.stringify(data));
+    });
+
+    effect(() => {
+      if (typeof window === 'undefined') return;
+      const data = this.cashAdvanceEntries();
+      localStorage.setItem(this.cashAdvanceStorageKey, JSON.stringify(data));
+    });
+
+    effect(() => {
+      if (typeof window === 'undefined') return;
+      const data = this.supplementEntries();
+      localStorage.setItem(this.supplementStorageKey, JSON.stringify(data));
+    });
   }
 
   logout() {
@@ -165,14 +209,14 @@ export class DashboardComponent {
     return module ? module.name : '';
   }
 
-  setMilkSession(session: 'morning' | 'evening') {
+  setMilkSession(session: MilkSession) {
     if (session !== this.milkSession()) {
       this.milkSession.set(session);
       this.resetMilkForm();
     }
   }
 
-  openMilkSubModule(session: 'morning' | 'evening') {
+  openMilkSubModule(session: MilkSession) {
     this.milkSession.set(session);
     this.selectedMilkSubModule.set(session);
     this.resetMilkForm();
@@ -248,7 +292,7 @@ export class DashboardComponent {
     const snfNum = Number(form.snf);
     const rateNum = Number((form.rate as number | '') || 0);
     const total = +(litersNum * rateNum).toFixed(2);
-    const entry = {
+    const entry: MilkEntry = {
       session: this.milkSession(),
       date: form.date,
       farmerId: form.farmerId.trim(),
@@ -258,7 +302,7 @@ export class DashboardComponent {
       snf: snfNum,
       rate: rateNum,
       totalAmount: total
-    } as const;
+    };
 
     const editIndex = this.editingMilkIndex();
     if (editIndex !== null) {
@@ -308,7 +352,7 @@ export class DashboardComponent {
   }
 
   // Customers helpers
-  updateNewCustomer<K extends keyof { farmerId: string; farmerName: string; address: string; mobileNumber: string }>(key: K, value: { farmerId: string; farmerName: string; address: string; mobileNumber: string }[K]) {
+  updateNewCustomer<K extends keyof CustomerProfile>(key: K, value: CustomerProfile[K]) {
     const current = this.newCustomer();
     this.newCustomer.set({ ...current, [key]: (value as string).trimStart() });
   }
@@ -374,5 +418,100 @@ export class DashboardComponent {
   cancelEditCustomer() {
     this.editingCustomerIndex.set(null);
     this.editingCustomer.set({ farmerId: '', farmerName: '', address: '', mobileNumber: '' });
+  }
+
+  handleInvoiceCreated(invoice: BillingInvoice) {
+    this.billingInvoices.update(list => [...list, invoice]);
+    this.showToast('success', 'Invoice created successfully');
+  }
+
+  handleInvoiceStatusChange(payload: { id: string; status: InvoiceStatus }) {
+    const updated = this.billingInvoices().map(invoice =>
+      invoice.id === payload.id ? { ...invoice, status: payload.status } : invoice
+    );
+    this.billingInvoices.set(updated);
+    this.showToast('success', 'Invoice status updated');
+  }
+
+  handleInvoiceDeleted(id: string) {
+    const confirmed = window.confirm('Are you sure you want to delete this invoice?');
+    if (!confirmed) return;
+    this.billingInvoices.set(this.billingInvoices().filter(invoice => invoice.id !== id));
+    this.showToast('success', 'Invoice deleted');
+  }
+
+  private createDefaultMilkForm(): MilkForm {
+    return {
+      date: new Date().toISOString().slice(0, 10),
+      farmerId: '',
+      liters: '',
+      fat: '',
+      snf: '',
+      farmerName: '',
+      rate: ''
+    };
+  }
+
+  private loadInvoicesFromStorage(): BillingInvoice[] {
+    if (typeof window === 'undefined') {
+      return [];
+    }
+    try {
+      const stored = localStorage.getItem(this.billingStorageKey);
+      if (!stored) return [];
+      const parsed = JSON.parse(stored) as BillingInvoice[];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  private loadCashEntriesFromStorage(): AdvanceEntry[] {
+    if (typeof window === 'undefined') {
+      return [];
+    }
+    try {
+      const stored = localStorage.getItem(this.cashAdvanceStorageKey);
+      if (!stored) return [];
+      const parsed = JSON.parse(stored) as AdvanceEntry[];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  private loadSupplementEntriesFromStorage(): SupplementEntry[] {
+    if (typeof window === 'undefined') {
+      return [];
+    }
+    try {
+      const stored = localStorage.getItem(this.supplementStorageKey);
+      if (!stored) return [];
+      const parsed = JSON.parse(stored) as SupplementEntry[];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  // Advance Payment handlers
+  handleCashAdvanceAdded(entry: AdvanceEntry) {
+    this.cashAdvanceEntries.update(list => [...list, entry]);
+    this.showToast('success', 'Cash advance entry added successfully');
+  }
+
+  handleCashAdvanceDeleted(entryId: string) {
+    this.cashAdvanceEntries.set(this.cashAdvanceEntries().filter(e => e.id !== entryId));
+    this.showToast('success', 'Cash advance entry deleted');
+  }
+
+  handleSupplementAdded(entry: SupplementEntry) {
+    this.supplementEntries.update(list => [...list, entry]);
+    this.showToast('success', 'Supplement entry added successfully');
+  }
+
+  handleSupplementDeleted(entryId: string) {
+    this.supplementEntries.set(this.supplementEntries().filter(e => e.id !== entryId));
+    this.showToast('success', 'Supplement entry deleted');
   }
 }

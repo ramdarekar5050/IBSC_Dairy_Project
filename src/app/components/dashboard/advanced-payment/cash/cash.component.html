@@ -1,17 +1,108 @@
-<div class="milk-entry">
-  <div class="milk-entry-header">
-    <h3>Advance by Cash</h3>
+<div class="cash-container">
+  <div class="cash-header">
     <div class="tabs">
-      <button class="tab" [class.active]="activeTab() === 'add'" (click)="switchTab('add')">Add Advance Entry</button>
-      <button class="tab" [class.active]="activeTab() === 'show'" (click)="switchTab('show')">Show Advance</button>
+      <button class="tab" [class.active]="activeTab() === 'add'" (click)="switchTab('add')">
+        ➕ Add Advance Entry
+      </button>
+      <button class="tab" [class.active]="activeTab() === 'show'" (click)="switchTab('show')">
+        📋 View Entries
+        @if (entries.length > 0) {
+          <span class="tab-badge">{{ entries.length }}</span>
+        }
+      </button>
     </div>
+    @if (activeTab() === 'show' && entries.length > 0) {
+      <div class="total-display">
+        <span class="total-label">Total:</span>
+        <span class="total-amount">₹ {{ totalAmount().toFixed(2) }}</span>
+      </div>
+    }
   </div>
 
   @if (activeTab() === 'add') {
-    <app-cash-add-entry (save)="handleAddEntry($event)"></app-cash-add-entry>
+    <div class="add-entry-form">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Date <span class="required">*</span></label>
+          <input type="date" [ngModel]="form().date" (ngModelChange)="update('date', $event)" required />
+        </div>
+        <div class="form-field">
+          <label>Farmer ID <span class="required">*</span></label>
+          <input
+            type="text"
+            list="farmer-list"
+            placeholder="Enter Farmer ID or select from list"
+            [ngModel]="form().farmerId"
+            (ngModelChange)="onFarmerIdChange($event)"
+            required />
+          <datalist id="farmer-list">
+            @for (customer of customers; track customer.farmerId) {
+              <option [value]="customer.farmerId">{{ customer.farmerName }} ({{ customer.farmerId }})</option>
+            }
+          </datalist>
+        </div>
+        <div class="form-field">
+          <label>Farmer Name</label>
+          <input type="text" [ngModel]="form().farmerName" (ngModelChange)="update('farmerName', $event)" readonly />
+        </div>
+        <div class="form-field">
+          <label>Amount (₹) <span class="required">*</span></label>
+          <input type="number" min="0" step="0.01" placeholder="0.00" [ngModel]="form().amount" (ngModelChange)="update('amount', $event)" required />
+        </div>
+        <div class="form-field full-width">
+          <label>Description</label>
+          <input type="text" placeholder="Description (optional)" [ngModel]="form().description" (ngModelChange)="update('description', $event)" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary" (click)="onSave()">💾 Save Entry</button>
+        <button class="btn-secondary" (click)="reset()">🔄 Reset</button>
+      </div>
+    </div>
   } @else {
-    <app-cash-show [entries]="entries()"></app-cash-show>
+    <div class="entries-container">
+      @if (entries.length > 0) {
+        <div class="table-wrapper">
+          <table class="entries-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Farmer ID</th>
+                <th>Farmer Name</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (entry of entries; track entry.id) {
+                <tr>
+                  <td>{{ formatDate(entry.date) }}</td>
+                  <td><strong>{{ entry.farmerId }}</strong></td>
+                  <td>{{ entry.farmerName || getCustomerName(entry.farmerId) || '-' }}</td>
+                  <td>{{ entry.description || '-' }}</td>
+                  <td><strong>{{ formatCurrency(entry.amount) }}</strong></td>
+                  <td>
+                    <button class="btn-delete" (click)="onDelete(entry.id)" title="Delete">🗑️</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr class="total-row">
+                <td colspan="4"><strong>Total</strong></td>
+                <td><strong>{{ formatCurrency(totalAmount()) }}</strong></td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <p>No cash advance entries found.</p>
+        </div>
+      }
+    </div>
   }
 </div>
-
-
